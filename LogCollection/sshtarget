@@ -1,0 +1,17 @@
+#!/usr/bin/expect -f
+set command [lindex $argv 0]
+set psw [lindex $argv 1]
+set command2 [lindex $argv 2]
+
+spawn  ssh $command
+
+expect {
+	"yes/no" { send "yes\r"; exp_continue}
+
+    "*assword:" { send "$psw\r" }
+}
+
+expect "WKS:.*"
+send "$command2\r"
+
+interact
