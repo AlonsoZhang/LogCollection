@@ -14,8 +14,9 @@
 		E206A6A12057AA4A0004B686 /* TargetPlan in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A02057AA4A0004B686 /* TargetPlan */; };
 		E206A6A32057B5560004B686 /* scp in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A22057B5560004B686 /* scp */; };
 		E206A6A52057CF5D0004B686 /* sshremove in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A42057CF5D0004B686 /* sshremove */; };
-		E206A6A72057D7BA0004B686 /* sshtarget in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A62057D7BA0004B686 /* sshtarget */; };
+		E206A6A72057D7BA0004B686 /* sshrun in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A62057D7BA0004B686 /* sshrun */; };
 		E206A6A92057DCBA0004B686 /* ssh in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A82057DCBA0004B686 /* ssh */; };
+		E2938D6E205A535B00DC804A /* temp.sh in Resources */ = {isa = PBXBuildFile; fileRef = E2938D6D205A535B00DC804A /* temp.sh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +30,9 @@
 		E206A6A02057AA4A0004B686 /* TargetPlan */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = TargetPlan; sourceTree = "<group>"; };
 		E206A6A22057B5560004B686 /* scp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scp; sourceTree = "<group>"; };
 		E206A6A42057CF5D0004B686 /* sshremove */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshremove; sourceTree = "<group>"; };
-		E206A6A62057D7BA0004B686 /* sshtarget */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshtarget; sourceTree = "<group>"; };
+		E206A6A62057D7BA0004B686 /* sshrun */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshrun; sourceTree = "<group>"; };
 		E206A6A82057DCBA0004B686 /* ssh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ssh; sourceTree = "<group>"; };
+		E2938D6D205A535B00DC804A /* temp.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = temp.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +72,8 @@
 				E206A69920574EAE0004B686 /* Info.plist */,
 				E206A69A20574EAE0004B686 /* LogCollection.entitlements */,
 				E206A6A42057CF5D0004B686 /* sshremove */,
-				E206A6A62057D7BA0004B686 /* sshtarget */,
+				E206A6A62057D7BA0004B686 /* sshrun */,
+				E2938D6D205A535B00DC804A /* temp.sh */,
 				E206A6A82057DCBA0004B686 /* ssh */,
 				E206A6A22057B5560004B686 /* scp */,
 				E206A6A02057AA4A0004B686 /* TargetPlan */,
@@ -142,10 +145,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2938D6E205A535B00DC804A /* temp.sh in Resources */,
 				E206A69520574EAE0004B686 /* Assets.xcassets in Resources */,
 				E206A6A32057B5560004B686 /* scp in Resources */,
 				E206A6A52057CF5D0004B686 /* sshremove in Resources */,
-				E206A6A72057D7BA0004B686 /* sshtarget in Resources */,
+				E206A6A72057D7BA0004B686 /* sshrun in Resources */,
 				E206A6A92057DCBA0004B686 /* ssh in Resources */,
 				E206A69820574EAE0004B686 /* Main.storyboard in Resources */,
 				E206A6A12057AA4A0004B686 /* TargetPlan in Resources */,

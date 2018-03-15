@@ -10,6 +10,6 @@ expect {
     "*assword:" { send "$psw\r" }
 }
 
-expect "WKS:.*"
+expect "WKS"
 send "rm $remove\r"
-interact
+expect eof

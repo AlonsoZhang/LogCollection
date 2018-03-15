@@ -83,10 +83,19 @@ class ViewController: NSViewController {
         let sTime = dateFormatter2.string(from: startDate!)
         let eTime = dateFormatter2.string(from: endDate!)
         let targetplanfile = Bundle.main.path(forResource:"TargetPlan", ofType: "")!
-        scpUpload(frompath: targetplanfile, topath: "/Users/\(user.stringValue)/Downloads/")
+        scp(frompath: targetplanfile, topath: "/Users/\(user.stringValue)/Downloads/",style: "upload")
+        let newlogDateFormat = logDateFormat.replacingOccurrences(of: "\\", with: "\\\\")
+        let cmd = "/Users/\(user.stringValue)/Downloads/TargetPlan \(logType) \(newlogDateFormat) \(sTime) \(eTime)"
+        let tempsh = Bundle.main.path(forResource:"temp", ofType: "sh")!
+        try! cmd.write(toFile: tempsh, atomically: true, encoding: String.Encoding.utf8)
         
-        let cmd = "/Users/\(user.stringValue)/Downloads/TargetPlan \(logType) \(logDateFormat) \(sTime) \(eTime)"
-        sshRun(command: cmd)
+        //scp(frompath: "/Users/\(user.stringValue)/Downloads/\()", topath: "/Users/Alonso/Downloads/",style: "download")
+        
+        
+        
+        //cmd = "/Users/sw/Downloads/TargetPlan -t \\d{8}-\\d{6} 20180306000000 20180313000000"
+        //print(cmd)
+        //sshRun(command: cmd)
         //print("expect \(scpfile) \(targetplanfile) \(user.stringValue)@\(ip.stringValue):/Users/\(user.stringValue)/Downloads/ \(password.stringValue)")
 //        let bbb = run(cmd: "\(scpfile) \(targetplanfile) \(user.stringValue)@\(ip.stringValue):/Users/\(user.stringValue)/Downloads/ \(password.stringValue)")
 //        print(bbb)
@@ -95,20 +104,27 @@ class ViewController: NSViewController {
         
         
 
+        var logfile = sshRun(command: "sh /Users/\(user.stringValue)/Downloads/temp.sh")
+        logfile = findStringInString(str: logfile, pattern: ".*?.tar")
+        print("aaa \(logfile)")
         
-        
-        
-        sshRemove(path: "/Users/\(user.stringValue)/Downloads/TargetPlan")
+        sshRemove(path: "/Users/\(user.stringValue)/Downloads/temp.sh /Users/\(user.stringValue)/Downloads/TargetPlan" )
     
         
     }
     
-    func scpUpload(frompath:String ,topath:String) {
+    func scp(frompath:String ,topath:String, style:String) {
         let scpfile = Bundle.main.path(forResource:"scp", ofType: "")!
         let task = Process()
         task.launchPath = "/usr/bin/expect"
-        let arguments = ["\(scpfile)","\(frompath)","\(user.stringValue)@\(ip.stringValue):\(topath)","\(password.stringValue)"]
-        task.arguments = arguments
+        if style == "upload"{
+            let arguments = ["\(scpfile)","\(frompath)","\(user.stringValue)@\(ip.stringValue):\(topath)","\(password.stringValue)"]
+            task.arguments = arguments
+        }else{
+            let arguments = ["\(scpfile)","\(user.stringValue)@\(ip.stringValue):\(frompath)","\(topath)","\(password.stringValue)"]
+            task.arguments = arguments
+        }
+        //task.arguments = arguments
         task.launch()
         task.waitUntilExit()
     }
@@ -117,20 +133,23 @@ class ViewController: NSViewController {
         let sshremovefile = Bundle.main.path(forResource:"sshremove", ofType: "")!
         let task = Process()
         task.launchPath = "/usr/bin/expect"
-        let arguments = ["\(sshremovefile)","gdlocal@\(ip.stringValue)","\(password.stringValue)","\(path)"]
+        let arguments = ["\(sshremovefile)","\(user.stringValue)@\(ip.stringValue)","\(password.stringValue)","\(path)"]
         task.arguments = arguments
         task.launch()
         task.waitUntilExit()
     }
     
-    func sshRun(command:String) {
-        let sshfile = Bundle.main.path(forResource:"sshtarget", ofType: "")!
+    func sshRun(command:String) -> String{
+        let sshfile = Bundle.main.path(forResource:"sshrun", ofType: "")!
         let task = Process()
+        let pipe = Pipe()
+        task.standardOutput = pipe
         task.launchPath = "/usr/bin/expect"
-        let arguments = ["\(sshfile)","gdlocal@\(ip.stringValue)","\(password.stringValue)","\(command)"]
+        let arguments = ["\(sshfile)","\(user.stringValue)@\(ip.stringValue)","\(password.stringValue)","\(command)"]
         task.arguments = arguments
         task.launch()
         task.waitUntilExit()
+        return String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: String.Encoding.utf8)!
     }
     
     var error: NSDictionary?
@@ -158,6 +177,44 @@ class ViewController: NSViewController {
             }else{
                 self.info.string = self.info.string + "\n\(inputString)"
             }
+        }
+    }
+    
+    func findArrayInString(str:String , pattern:String ) -> [String]
+    {
+        do {
+            var stringArray = [String]();
+            let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.caseInsensitive)
+            let res = regex.matches(in: str, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, str.count))
+            for checkingRes in res
+            {
+                let tmp = (str as NSString).substring(with: checkingRes.range)
+                stringArray.append(tmp.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))
+            }
+            return stringArray
+        }
+        catch
+        {
+            showmessage(inputString: "findArrayInString Regex error")
+            return [String]()
+        }
+    }
+    
+    func findStringInString(str:String , pattern:String ) -> String
+    {
+        do {
+            let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.caseInsensitive)
+            let res = regex.firstMatch(in: str, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, str.count))
+            if let checkingRes = res
+            {
+                return ((str as NSString).substring(with: checkingRes.range)).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            }
+            return ""
+        }
+        catch
+        {
+            showmessage(inputString: "findStringInString Regex error")
+            return ""
         }
     }
     

@@ -13,5 +13,4 @@ expect {
 
 expect "WKS:.*"
 send "$command2\r"
-
-interact
+expect eof

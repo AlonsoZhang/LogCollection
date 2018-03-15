@@ -9,4 +9,4 @@ expect {
 
     "*assword:" { send "$psw\r" }
 }
-interact
+expect eof
