@@ -1,11 +1,11 @@
 #!/usr/bin/expect -f
 set command [lindex $argv 0]
 set psw [lindex $argv 1]
-
+set timeout 2
 spawn  ssh $command
 
 expect {
-	"yes/no" { send "yes\r"; exp_continue}
+	"yes/no" { send "yes\r"}
 
     "*assword:" { send "$psw\r" }
 }

@@ -12,37 +12,31 @@ class ViewController: NSViewController {
 
     @IBOutlet weak var ip: NSTextField!
     @IBOutlet weak var user: NSTextField!
-    @IBOutlet weak var password: NSTextField!
+    @IBOutlet weak var psw: NSTextField!
     @IBOutlet var info: NSTextView!
     @IBOutlet weak var startTime: NSTextField!
     @IBOutlet weak var endTime: NSTextField!
+    @IBOutlet weak var exportBtn: NSButton!
+    @IBOutlet weak var scrollview: NSScrollView!
+    
     var logType = "-t"
     var logDateFormat = "\\d{8}-\\d{6}"
+    var username = ""
+    var password = ""
+    var ipaddress = ""
+    let dateFormatter = DateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //let path = "/Users/alonso/Desktop/scp"
-        
-        
-//        expect /Users/alonso/Desktop/scp /Users/alonso/Desktop/demo.txt gdlocal@172.17.68.147:/Users/gdlocal/Documents/ gdlocal
-//
-//        NSString shellPath = @"/Users/lengshengren/Desktop/tool/LSUnusedResources-master/simian/bin";
-//        //脚本路径
-//        NSString* path =[shellPaht stringByAppendingString:@"/aksimian.sh"];
-//
-//        NSTask *task = [[NSTask alloc] init];
-//        [task setLaunchPath: @"/bin/sh"];
-//        //数组index 0 shell路径, 如果shell 脚本有输入参数,可以加入数组里，index 1 可以输入$1 @[path,@"$1"],依次延后。
-//        NSArray *arguments =@[path];
-//        [task setArguments: arguments];
-//        [task launch];
-        // Do any additional setup after loading the view.
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "yyyy-MM-dd HH:"
+        endTime.stringValue = "\(dayFormatter.string(from: Date()))00:00"
+        startTime.stringValue = "\(dayFormatter.string(from: Date().addingTimeInterval(-7*3600*24)))00:00"
     }
 
     override var representedObject: Any? {
         didSet {
-        // Update the view, if already loaded.
         }
     }
 
@@ -65,13 +59,17 @@ class ViewController: NSViewController {
             logDateFormat = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\.\\d{3}"
         }
         if(tag==2){
-            logDateFormat = ""
+            logDateFormat = "None"
+            startTime.isEnabled = false
+            endTime.isEnabled = false
+        }else{
+            startTime.isEnabled = true
+            endTime.isEnabled = true
         }
     }
     
     @IBAction func export(_ sender: NSButton) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        showmessage(inputString: "Start Program")
         let dateFormatter2 = DateFormatter()
         dateFormatter2.dateFormat = "yyyyMMddHHmmss"
         let startDate = dateFormatter.date(from: startTime.stringValue)
@@ -80,51 +78,53 @@ class ViewController: NSViewController {
             showmessage(inputString: "Date format is error, please check.")
             return
         }
-        let sTime = dateFormatter2.string(from: startDate!)
-        let eTime = dateFormatter2.string(from: endDate!)
-        let targetplanfile = Bundle.main.path(forResource:"TargetPlan", ofType: "")!
-        scp(frompath: targetplanfile, topath: "/Users/\(user.stringValue)/Downloads/",style: "upload")
-        let newlogDateFormat = logDateFormat.replacingOccurrences(of: "\\", with: "\\\\")
-        let cmd = "/Users/\(user.stringValue)/Downloads/TargetPlan \(logType) \(newlogDateFormat) \(sTime) \(eTime)"
-        let tempsh = Bundle.main.path(forResource:"temp", ofType: "sh")!
-        try! cmd.write(toFile: tempsh, atomically: true, encoding: String.Encoding.utf8)
-        
-        //scp(frompath: "/Users/\(user.stringValue)/Downloads/\()", topath: "/Users/Alonso/Downloads/",style: "download")
-        
-        
-        
-        //cmd = "/Users/sw/Downloads/TargetPlan -t \\d{8}-\\d{6} 20180306000000 20180313000000"
-        //print(cmd)
-        //sshRun(command: cmd)
-        //print("expect \(scpfile) \(targetplanfile) \(user.stringValue)@\(ip.stringValue):/Users/\(user.stringValue)/Downloads/ \(password.stringValue)")
-//        let bbb = run(cmd: "\(scpfile) \(targetplanfile) \(user.stringValue)@\(ip.stringValue):/Users/\(user.stringValue)/Downloads/ \(password.stringValue)")
-//        print(bbb)
-        //let aaa = run(cmd: "\(file) \(logType) \(logDateFormat) \(sTime) \(eTime)")
-        //print(aaa)
-        
-        
-
-        var logfile = sshRun(command: "sh /Users/\(user.stringValue)/Downloads/temp.sh")
-        logfile = findStringInString(str: logfile, pattern: ".*?.tar")
-        print("aaa \(logfile)")
-        
-        sshRemove(path: "/Users/\(user.stringValue)/Downloads/temp.sh /Users/\(user.stringValue)/Downloads/TargetPlan" )
-    
-        
+        exportBtn.isEnabled = false
+        username = user.stringValue
+        password = psw.stringValue
+        ipaddress = ip.stringValue
+        showmessage(inputString: "IP: \(ipaddress), User: \(username), Password: \(password)")
+        DispatchQueue.global().async {
+            let sTime = dateFormatter2.string(from: startDate!)
+            let eTime = dateFormatter2.string(from: endDate!)
+            let targetplanfile = Bundle.main.path(forResource:"TargetPlan", ofType: "")!
+            self.showmessage(inputString: "Upload TargetPlan to \(self.ipaddress)")
+            self.scp(frompath: targetplanfile, topath: "/Users/\(self.username)/Downloads/",upload: true)
+            let newlogDateFormat = self.logDateFormat.replacingOccurrences(of: "\\", with: "\\\\")
+            let cmd = "/Users/\(self.username)/Downloads/TargetPlan \(self.logType) \(newlogDateFormat) \(sTime) \(eTime)"
+            let tempsh = Bundle.main.path(forResource:"temp", ofType: "sh")!
+            try! cmd.write(toFile: tempsh, atomically: true, encoding: String.Encoding.utf8)
+            self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true)
+            self.showmessage(inputString: "Start run TargetPlan...")
+            var logfile = self.sshRun(command: "sh /Users/\(self.username)/Downloads/temp.sh")
+            if logfile.contains("No file match regex or time rule"){
+                self.showmessage(inputString: "No file match regex or time rule")
+            }
+            logfile = self.findStringInString(str: logfile, pattern: ".*?.tar")
+            if logfile.count > 0{
+                self.showmessage(inputString: "Download \(logfile)")
+                let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
+                self.scp(frompath: logfile, topath: paths[0] as! String, upload: false)
+            }
+            self.showmessage(inputString: "Remove unwanted files")
+            self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(logfile)" )
+            self.showmessage(inputString: "Finish")
+            DispatchQueue.main.async {
+                self.exportBtn.isEnabled = true
+            }
+        }
     }
     
-    func scp(frompath:String ,topath:String, style:String) {
+    func scp(frompath:String ,topath:String, upload:Bool) {
         let scpfile = Bundle.main.path(forResource:"scp", ofType: "")!
         let task = Process()
         task.launchPath = "/usr/bin/expect"
-        if style == "upload"{
-            let arguments = ["\(scpfile)","\(frompath)","\(user.stringValue)@\(ip.stringValue):\(topath)","\(password.stringValue)"]
+        if upload{
+            let arguments = ["\(scpfile)","\(frompath)","\(self.username)@\(self.ipaddress):\(topath)","\(self.password)"]
             task.arguments = arguments
         }else{
-            let arguments = ["\(scpfile)","\(user.stringValue)@\(ip.stringValue):\(frompath)","\(topath)","\(password.stringValue)"]
+            let arguments = ["\(scpfile)","\(self.username)@\(self.ipaddress):\(frompath)","\(topath)","\(self.password)"]
             task.arguments = arguments
         }
-        //task.arguments = arguments
         task.launch()
         task.waitUntilExit()
     }
@@ -133,10 +133,10 @@ class ViewController: NSViewController {
         let sshremovefile = Bundle.main.path(forResource:"sshremove", ofType: "")!
         let task = Process()
         task.launchPath = "/usr/bin/expect"
-        let arguments = ["\(sshremovefile)","\(user.stringValue)@\(ip.stringValue)","\(password.stringValue)","\(path)"]
+        let arguments = ["\(sshremovefile)","\(self.username)@\(self.ipaddress)","\(self.password)","\(path)"]
         task.arguments = arguments
         task.launch()
-        task.waitUntilExit()
+        //task.waitUntilExit()
     }
     
     func sshRun(command:String) -> String{
@@ -145,7 +145,20 @@ class ViewController: NSViewController {
         let pipe = Pipe()
         task.standardOutput = pipe
         task.launchPath = "/usr/bin/expect"
-        let arguments = ["\(sshfile)","\(user.stringValue)@\(ip.stringValue)","\(password.stringValue)","\(command)"]
+        let arguments = ["\(sshfile)","\(self.username)@\(self.ipaddress)","\(self.password)","\(command)"]
+        task.arguments = arguments
+        task.launch()
+        task.waitUntilExit()
+        return String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: String.Encoding.utf8)!
+    }
+    
+    func ssh() -> String{
+        let sshfile = Bundle.main.path(forResource:"ssh", ofType: "")!
+        let task = Process()
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.launchPath = "/usr/bin/expect"
+        let arguments = ["\(sshfile)","\(self.username)@\(self.ipaddress)","\(self.password)"]
         task.arguments = arguments
         task.launch()
         task.waitUntilExit()
@@ -173,30 +186,17 @@ class ViewController: NSViewController {
     func showmessage(inputString: String) {
         DispatchQueue.main.async {
             if self.info.string == "" {
-                self.info.string = inputString
+                self.info.string = "\(self.dateFormatter.string(from: Date()))  \(inputString)"
             }else{
-                self.info.string = self.info.string + "\n\(inputString)"
+                self.info.string = self.info.string + "\n\(self.dateFormatter.string(from: Date()))  \(inputString)"
             }
-        }
-    }
-    
-    func findArrayInString(str:String , pattern:String ) -> [String]
-    {
-        do {
-            var stringArray = [String]();
-            let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.caseInsensitive)
-            let res = regex.matches(in: str, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, str.count))
-            for checkingRes in res
-            {
-                let tmp = (str as NSString).substring(with: checkingRes.range)
-                stringArray.append(tmp.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))
+            if let height = self.scrollview.documentView?.bounds.size.height{
+                var diff = height-self.scrollview.documentVisibleRect.height
+                if diff < 0 {
+                    diff = 0
+                }
+                self.scrollview.contentView.scroll(NSMakePoint(0, diff))
             }
-            return stringArray
-        }
-        catch
-        {
-            showmessage(inputString: "findArrayInString Regex error")
-            return [String]()
         }
     }
     
@@ -217,6 +217,5 @@ class ViewController: NSViewController {
             return ""
         }
     }
-    
 }
 

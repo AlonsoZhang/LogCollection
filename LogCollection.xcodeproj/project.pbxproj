@@ -9,30 +9,30 @@
 /* Begin PBXBuildFile section */
 		E206A69120574EAE0004B686 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E206A69020574EAE0004B686 /* AppDelegate.swift */; };
 		E206A69320574EAE0004B686 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E206A69220574EAE0004B686 /* ViewController.swift */; };
-		E206A69520574EAE0004B686 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E206A69420574EAE0004B686 /* Assets.xcassets */; };
 		E206A69820574EAE0004B686 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E206A69620574EAE0004B686 /* Main.storyboard */; };
-		E206A6A12057AA4A0004B686 /* TargetPlan in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A02057AA4A0004B686 /* TargetPlan */; };
 		E206A6A32057B5560004B686 /* scp in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A22057B5560004B686 /* scp */; };
 		E206A6A52057CF5D0004B686 /* sshremove in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A42057CF5D0004B686 /* sshremove */; };
 		E206A6A72057D7BA0004B686 /* sshrun in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A62057D7BA0004B686 /* sshrun */; };
 		E206A6A92057DCBA0004B686 /* ssh in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A82057DCBA0004B686 /* ssh */; };
 		E2938D6E205A535B00DC804A /* temp.sh in Resources */ = {isa = PBXBuildFile; fileRef = E2938D6D205A535B00DC804A /* temp.sh */; };
+		E2DEC27D205B5A900081756B /* TargetPlan in Resources */ = {isa = PBXBuildFile; fileRef = E2DEC27C205B5A900081756B /* TargetPlan */; };
+		E2DEC27F205B920B0081756B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2DEC27E205B920B0081756B /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E206A68D20574EAE0004B686 /* LogCollection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LogCollection.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E206A69020574EAE0004B686 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E206A69220574EAE0004B686 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		E206A69420574EAE0004B686 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E206A69720574EAE0004B686 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E206A69920574EAE0004B686 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E206A69A20574EAE0004B686 /* LogCollection.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LogCollection.entitlements; sourceTree = "<group>"; };
-		E206A6A02057AA4A0004B686 /* TargetPlan */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = TargetPlan; sourceTree = "<group>"; };
 		E206A6A22057B5560004B686 /* scp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scp; sourceTree = "<group>"; };
 		E206A6A42057CF5D0004B686 /* sshremove */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshremove; sourceTree = "<group>"; };
 		E206A6A62057D7BA0004B686 /* sshrun */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshrun; sourceTree = "<group>"; };
 		E206A6A82057DCBA0004B686 /* ssh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ssh; sourceTree = "<group>"; };
 		E2938D6D205A535B00DC804A /* temp.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = temp.sh; sourceTree = "<group>"; };
+		E2DEC27C205B5A900081756B /* TargetPlan */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = TargetPlan; sourceTree = "<group>"; };
+		E2DEC27E205B920B0081756B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,16 +67,16 @@
 			children = (
 				E206A69020574EAE0004B686 /* AppDelegate.swift */,
 				E206A69220574EAE0004B686 /* ViewController.swift */,
-				E206A69420574EAE0004B686 /* Assets.xcassets */,
 				E206A69620574EAE0004B686 /* Main.storyboard */,
 				E206A69920574EAE0004B686 /* Info.plist */,
 				E206A69A20574EAE0004B686 /* LogCollection.entitlements */,
+				E2DEC27E205B920B0081756B /* Assets.xcassets */,
+				E2DEC27C205B5A900081756B /* TargetPlan */,
 				E206A6A42057CF5D0004B686 /* sshremove */,
 				E206A6A62057D7BA0004B686 /* sshrun */,
 				E2938D6D205A535B00DC804A /* temp.sh */,
 				E206A6A82057DCBA0004B686 /* ssh */,
 				E206A6A22057B5560004B686 /* scp */,
-				E206A6A02057AA4A0004B686 /* TargetPlan */,
 			);
 			path = LogCollection;
 			sourceTree = "<group>";
@@ -146,13 +146,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2938D6E205A535B00DC804A /* temp.sh in Resources */,
-				E206A69520574EAE0004B686 /* Assets.xcassets in Resources */,
 				E206A6A32057B5560004B686 /* scp in Resources */,
 				E206A6A52057CF5D0004B686 /* sshremove in Resources */,
+				E2DEC27D205B5A900081756B /* TargetPlan in Resources */,
 				E206A6A72057D7BA0004B686 /* sshrun in Resources */,
 				E206A6A92057DCBA0004B686 /* ssh in Resources */,
+				E2DEC27F205B920B0081756B /* Assets.xcassets in Resources */,
 				E206A69820574EAE0004B686 /* Main.storyboard in Resources */,
-				E206A6A12057AA4A0004B686 /* TargetPlan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

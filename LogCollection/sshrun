@@ -2,15 +2,13 @@
 set command [lindex $argv 0]
 set psw [lindex $argv 1]
 set command2 [lindex $argv 2]
-
 spawn  ssh $command
 
 expect {
 	"yes/no" { send "yes\r"; exp_continue}
-
     "*assword:" { send "$psw\r" }
 }
 
-expect "WKS:.*"
+expect "WIKS*"
 send "$command2\r"
 expect eof

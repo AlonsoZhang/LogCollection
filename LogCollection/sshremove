@@ -2,7 +2,6 @@
 set command [lindex $argv 0]
 set psw [lindex $argv 1]
 set remove [lindex $argv 2]
-
 spawn  ssh $command
 
 expect {
@@ -10,6 +9,6 @@ expect {
     "*assword:" { send "$psw\r" }
 }
 
-expect "WKS"
+expect "WIKS*"
 send "rm $remove\r"
 expect eof
