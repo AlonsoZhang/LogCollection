@@ -23,7 +23,7 @@ class ViewController: NSViewController {
     var logDateFormat = "\\d{8}-\\d{6}"
     var username = ""
     var password = ""
-    var ipaddress = ""
+    var ipArr:[String] = []
     let dateFormatter = DateFormatter()
     
     override func viewDidLoad() {
@@ -69,7 +69,6 @@ class ViewController: NSViewController {
     }
     
     @IBAction func export(_ sender: NSButton) {
-        showmessage(inputString: "Start Program")
         let dateFormatter2 = DateFormatter()
         dateFormatter2.dateFormat = "yyyyMMddHHmmss"
         let startDate = dateFormatter.date(from: startTime.stringValue)
@@ -81,84 +80,93 @@ class ViewController: NSViewController {
         exportBtn.isEnabled = false
         username = user.stringValue
         password = psw.stringValue
-        ipaddress = ip.stringValue
-        showmessage(inputString: "IP: \(ipaddress), User: \(username), Password: \(password)")
-        DispatchQueue.global().async {
-            let sTime = dateFormatter2.string(from: startDate!)
-            let eTime = dateFormatter2.string(from: endDate!)
-            let targetplanfile = Bundle.main.path(forResource:"TargetPlan", ofType: "")!
-            self.showmessage(inputString: "Upload TargetPlan to \(self.ipaddress)")
-            self.scp(frompath: targetplanfile, topath: "/Users/\(self.username)/Downloads/",upload: true)
-            let newlogDateFormat = self.logDateFormat.replacingOccurrences(of: "\\", with: "\\\\")
-            let cmd = "/Users/\(self.username)/Downloads/TargetPlan \(self.logType) \(newlogDateFormat) \(sTime) \(eTime)"
-            let tempsh = Bundle.main.path(forResource:"temp", ofType: "sh")!
-            try! cmd.write(toFile: tempsh, atomically: true, encoding: String.Encoding.utf8)
-            self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true)
-            self.showmessage(inputString: "Start run TargetPlan...")
-            var logfile = self.sshRun(command: "sh /Users/\(self.username)/Downloads/temp.sh")
-            if logfile.contains("No file match regex or time rule"){
-                self.showmessage(inputString: "No file match regex or time rule")
-            }
-            logfile = self.findStringInString(str: logfile, pattern: ".*?.tar")
-            if logfile.count > 0{
-                self.showmessage(inputString: "Download \(logfile)")
-                let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
-                self.scp(frompath: logfile, topath: paths[0] as! String, upload: false)
-            }
-            self.showmessage(inputString: "Remove unwanted files")
-            self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(logfile)" )
-            self.showmessage(inputString: "Finish")
-            DispatchQueue.main.async {
-                self.exportBtn.isEnabled = true
+        ipArr = ip.stringValue.components(separatedBy: ",")
+        showmessage(inputString: "Start Program ... Total \(ipArr.count) IP")
+        for (index, ipaddress) in ipArr.enumerated() {
+            let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
+            showmessage(inputString: "\(indexnum) User: \(username), Password: \(password)")
+            DispatchQueue.global().async {
+                let sTime = dateFormatter2.string(from: startDate!)
+                let eTime = dateFormatter2.string(from: endDate!)
+                let targetplanfile = Bundle.main.path(forResource:"TargetPlan", ofType: "")!
+                self.showmessage(inputString: "\(indexnum) Upload TargetPlan")
+                let beforescp = Date()
+                self.scp(frompath: targetplanfile, topath: "/Users/\(self.username)/Downloads/",upload: true,ip: ipaddress)
+                let afterscp = Date()
+                let scptime = Int(afterscp.timeIntervalSince1970-beforescp.timeIntervalSince1970)
+                if scptime > 5{
+                    self.showmessage(inputString: "\(indexnum) Build Connection Fail!")
+                    return
+                }
+                let newlogDateFormat = self.logDateFormat.replacingOccurrences(of: "\\", with: "\\\\")
+                let cmd = "/Users/\(self.username)/Downloads/TargetPlan \(self.logType) \(newlogDateFormat) \(sTime) \(eTime)"
+                let tempsh = Bundle.main.path(forResource:"temp", ofType: "sh")!
+                try! cmd.write(toFile: tempsh, atomically: true, encoding: String.Encoding.utf8)
+                self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
+                self.showmessage(inputString: "\(indexnum) Start run TargetPlan...")
+                var logfile = self.sshRun(command: "sh /Users/\(self.username)/Downloads/temp.sh",ip: ipaddress)
+                if logfile.contains("No file match regex or time rule"){
+                    self.showmessage(inputString: "\(indexnum) No file match regex or time rule")
+                }
+                logfile = self.findStringInString(str: logfile, pattern: ".*?.tar")
+                if logfile.count > 0{
+                    self.showmessage(inputString: "\(indexnum) Download \(logfile)")
+                    let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
+                    self.scp(frompath: logfile, topath: paths[0] as! String, upload: false, ip: ipaddress)
+                }
+                self.showmessage(inputString: "\(indexnum) Remove unwanted files")
+                self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(logfile)", ip: ipaddress)
+                self.showmessage(inputString: "\(indexnum) Well Done!")
             }
         }
+        exportBtn.isEnabled = true
     }
     
-    func scp(frompath:String ,topath:String, upload:Bool) {
+    func scp(frompath:String ,topath:String, upload:Bool, ip:String) {
         let scpfile = Bundle.main.path(forResource:"scp", ofType: "")!
         let task = Process()
         task.launchPath = "/usr/bin/expect"
         if upload{
-            let arguments = ["\(scpfile)","\(frompath)","\(self.username)@\(self.ipaddress):\(topath)","\(self.password)"]
+            let arguments = ["\(scpfile)","\(frompath)","\(self.username)@\(ip):\(topath)","\(self.password)"]
             task.arguments = arguments
         }else{
-            let arguments = ["\(scpfile)","\(self.username)@\(self.ipaddress):\(frompath)","\(topath)","\(self.password)"]
+            let arguments = ["\(scpfile)","\(self.username)@\(ip):\(frompath)","\(topath)","\(self.password)"]
             task.arguments = arguments
         }
         task.launch()
         task.waitUntilExit()
     }
     
-    func sshRemove(path:String) {
+    func sshRemove(path:String, ip:String) {
         let sshremovefile = Bundle.main.path(forResource:"sshremove", ofType: "")!
         let task = Process()
         task.launchPath = "/usr/bin/expect"
-        let arguments = ["\(sshremovefile)","\(self.username)@\(self.ipaddress)","\(self.password)","\(path)"]
+        let arguments = ["\(sshremovefile)","\(self.username)@\(ip)","\(self.password)","\(path)"]
         task.arguments = arguments
         task.launch()
         //task.waitUntilExit()
     }
     
-    func sshRun(command:String) -> String{
+    func sshRun(command:String ,ip:String) -> String{
         let sshfile = Bundle.main.path(forResource:"sshrun", ofType: "")!
         let task = Process()
         let pipe = Pipe()
         task.standardOutput = pipe
         task.launchPath = "/usr/bin/expect"
-        let arguments = ["\(sshfile)","\(self.username)@\(self.ipaddress)","\(self.password)","\(command)"]
+        let arguments = ["\(sshfile)","\(self.username)@\(ip)","\(self.password)","\(command)"]
         task.arguments = arguments
         task.launch()
         task.waitUntilExit()
         return String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: String.Encoding.utf8)!
     }
     
-    func ssh() -> String{
+    func ssh(ip:String) -> String{
         let sshfile = Bundle.main.path(forResource:"ssh", ofType: "")!
         let task = Process()
         let pipe = Pipe()
         task.standardOutput = pipe
         task.launchPath = "/usr/bin/expect"
-        let arguments = ["\(sshfile)","\(self.username)@\(self.ipaddress)","\(self.password)"]
+        let arguments = ["\(sshfile)","\(self.username)@\(ip)","\(self.password)"]
         task.arguments = arguments
         task.launch()
         task.waitUntilExit()
@@ -218,4 +226,3 @@ class ViewController: NSViewController {
         }
     }
 }
-
