@@ -20,7 +20,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var scrollview: NSScrollView!
     
     var logType = "-t"
-    var logDateFormat = "\\d{8}-\\d{6}"
+    var logDateFormat = "None"
     var username = ""
     var password = ""
     var ipArr:[String] = []
@@ -33,6 +33,9 @@ class ViewController: NSViewController {
         dayFormatter.dateFormat = "yyyy-MM-dd HH:"
         endTime.stringValue = "\(dayFormatter.string(from: Date()))00:00"
         startTime.stringValue = "\(dayFormatter.string(from: Date().addingTimeInterval(-7*3600*24)))00:00"
+        startTime.isEnabled = false
+        endTime.isEnabled = false
+        
     }
 
     override var representedObject: Any? {

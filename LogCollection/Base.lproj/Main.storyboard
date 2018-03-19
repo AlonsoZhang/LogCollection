@@ -783,7 +783,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="16" id="91L-1F-w6P"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="radio" title="(All)None" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ocy-v7-iXb">
+                                            <buttonCell key="cell" type="radio" title="(All)None" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="ocy-v7-iXb">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -796,7 +796,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="16" id="pEf-rt-JN8"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="radio" title="(AE)yyyyMMdd-HHmmss" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Qzj-d6-deJ">
+                                            <buttonCell key="cell" type="radio" title="(AE)yyyyMMdd-HHmmss" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Qzj-d6-deJ">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -878,7 +878,7 @@
                             </box>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SNM-Qs-U86">
                                 <rect key="frame" x="46" y="201" width="673" height="22"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" title="172.17.68.147" drawsBackground="YES" id="Xce-BO-bdK">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" placeholderString="Please Input IP separated by a comma" drawsBackground="YES" id="Xce-BO-bdK">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -895,7 +895,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <size key="minSize" width="785" height="161"/>
-                                            <size key="maxSize" width="785" height="10000000"/>
+                                            <size key="maxSize" width="787" height="10000000"/>
                                             <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </textView>
                                     </subviews>
@@ -922,7 +922,7 @@
                                                 <constraint firstAttribute="height" constant="22" id="U3I-za-BA2"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="j4Q-QG-muf"/>
                                             </constraints>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" title="gdlocal" drawsBackground="YES" id="a71-0z-q7x">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" refusesFirstResponder="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" title="gdlocal" drawsBackground="YES" id="a71-0z-q7x">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -934,7 +934,7 @@
                                                 <constraint firstAttribute="height" constant="22" id="Ojw-fC-JCN"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="eUJ-i8-lUv"/>
                                             </constraints>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" title="gdlocal" drawsBackground="YES" id="DuZ-on-YUn">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" refusesFirstResponder="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" title="gdlocal" drawsBackground="YES" id="DuZ-on-YUn">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
