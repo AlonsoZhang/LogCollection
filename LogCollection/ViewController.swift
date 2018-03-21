@@ -18,6 +18,11 @@ class ViewController: NSViewController {
     @IBOutlet weak var endTime: NSTextField!
     @IBOutlet weak var exportBtn: NSButton!
     @IBOutlet weak var scrollview: NSScrollView!
+    @IBOutlet weak var aplogdate: NSButton!
+    @IBOutlet weak var aelogdate: NSButton!
+    @IBOutlet weak var nonelogdate: NSButton!
+    @IBOutlet weak var tmpdir: NSButton!
+    @IBOutlet weak var docum: NSButton!
     
     var logType = "-t"
     var logDateFormat = "None"
@@ -25,6 +30,7 @@ class ViewController: NSViewController {
     var password = ""
     var ipArr:[String] = []
     let dateFormatter = DateFormatter()
+    let queue = DispatchQueue(label: "LogCollection.wistron", qos: DispatchQoS.default)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,16 +53,22 @@ class ViewController: NSViewController {
         let tag = sender.tag
         if tag==0 {
             logType = "-t"
+            aplogdate.isEnabled = true
         }
         if(tag==1){
             logType = "-l"
+            aplogdate.isEnabled = false
         }
     }
     
     @IBAction func chooseLogDateFormatAction(_ sender: NSButton) {
         let tag = sender.tag
         if tag==0 {
-            logDateFormat = "\\d{8}-\\d{6}"
+            if docum.state.rawValue == 0{
+                logDateFormat = "\\d{8}-\\d{6}"
+            }else{
+                logDateFormat = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}"
+            }
         }
         if(tag==1){
             logDateFormat = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\.\\d{3}"
@@ -85,27 +97,31 @@ class ViewController: NSViewController {
         password = psw.stringValue
         ipArr = ip.stringValue.components(separatedBy: ",")
         showmessage(inputString: "Start Program ... Total \(ipArr.count) IP")
+        let sTime = dateFormatter2.string(from: startDate!)
+        let eTime = dateFormatter2.string(from: endDate!)
+        let targetplanfile = Bundle.main.path(forResource:"TargetPlan", ofType: "")!
+        let newlogDateFormat = self.logDateFormat.replacingOccurrences(of: "\\", with: "\\\\")
+        let cmd = "/Users/\(self.username)/Downloads/TargetPlan \(self.logType) \(newlogDateFormat) \(sTime) \(eTime)"
+        let tempsh = Bundle.main.path(forResource:"temp", ofType: "sh")!
+        try! cmd.write(toFile: tempsh, atomically: true, encoding: String.Encoding.utf8)
         for (index, ipaddress) in ipArr.enumerated() {
             let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
             showmessage(inputString: "\(indexnum) User: \(username), Password: \(password)")
             DispatchQueue.global().async {
-                let sTime = dateFormatter2.string(from: startDate!)
-                let eTime = dateFormatter2.string(from: endDate!)
-                let targetplanfile = Bundle.main.path(forResource:"TargetPlan", ofType: "")!
-                self.showmessage(inputString: "\(indexnum) Upload TargetPlan")
-                let beforescp = Date()
-                self.scp(frompath: targetplanfile, topath: "/Users/\(self.username)/Downloads/",upload: true,ip: ipaddress)
-                let afterscp = Date()
-                let scptime = Int(afterscp.timeIntervalSince1970-beforescp.timeIntervalSince1970)
-                if scptime > 5{
-                    self.showmessage(inputString: "\(indexnum) Build Connection Fail!")
-                    return
+                self.queue.sync {
+                    let beforescp = Date()
+                    self.scp(frompath: targetplanfile, topath: "/Users/\(self.username)/Downloads/",upload: true,ip: ipaddress)
+                    let afterscp = Date()
+                    let scptime = Int(afterscp.timeIntervalSince1970-beforescp.timeIntervalSince1970)
+                    if scptime > 9{
+                        self.showmessage(inputString: "\(indexnum) Build Connection Fail!")
+                        return
+                    }
                 }
-                let newlogDateFormat = self.logDateFormat.replacingOccurrences(of: "\\", with: "\\\\")
-                let cmd = "/Users/\(self.username)/Downloads/TargetPlan \(self.logType) \(newlogDateFormat) \(sTime) \(eTime)"
-                let tempsh = Bundle.main.path(forResource:"temp", ofType: "sh")!
-                try! cmd.write(toFile: tempsh, atomically: true, encoding: String.Encoding.utf8)
-                self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
+                self.showmessage(inputString: "\(indexnum) Upload TargetPlan")
+                self.queue.sync {
+                    self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
+                }
                 self.showmessage(inputString: "\(indexnum) Start run TargetPlan...")
                 var logfile = self.sshRun(command: "sh /Users/\(self.username)/Downloads/temp.sh",ip: ipaddress)
                 if logfile.contains("No file match regex or time rule"){

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -723,7 +724,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="16" id="N2x-sI-rX0"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="radio" title="Documents" bezelStyle="regularSquare" imagePosition="left" alignment="left" enabled="NO" inset="2" id="inu-Ri-WUj">
+                                            <buttonCell key="cell" type="radio" title="Documents" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="inu-Ri-WUj">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -1007,13 +1008,18 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="aelogdate" destination="Q7C-ek-H6u" id="jRr-EP-aeT"/>
+                        <outlet property="aplogdate" destination="6PW-S4-hcN" id="USe-OC-hlv"/>
+                        <outlet property="docum" destination="ibP-00-Kfc" id="2fW-Te-XvQ"/>
                         <outlet property="endTime" destination="mNi-7u-MGT" id="Tvb-uY-H4h"/>
                         <outlet property="exportBtn" destination="KaT-YL-dx9" id="rDz-UR-7QP"/>
                         <outlet property="info" destination="RFH-CF-QIb" id="9SP-iH-D7e"/>
                         <outlet property="ip" destination="SNM-Qs-U86" id="si9-pf-wOJ"/>
+                        <outlet property="nonelogdate" destination="Ab7-t8-tyE" id="ecB-wh-x5w"/>
                         <outlet property="psw" destination="Tbx-3K-lbT" id="f9o-vc-jhA"/>
                         <outlet property="scrollview" destination="NIm-o3-UsL" id="2s1-Ps-49K"/>
                         <outlet property="startTime" destination="5ml-bd-Rv6" id="mqv-hc-ep4"/>
+                        <outlet property="tmpdir" destination="qS6-0z-2Nu" id="W14-k0-KgQ"/>
                         <outlet property="user" destination="eTr-qx-m56" id="2T4-2e-VZM"/>
                     </connections>
                 </viewController>
