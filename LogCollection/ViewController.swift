@@ -54,10 +54,12 @@ class ViewController: NSViewController {
         if tag==0 {
             logType = "-t"
             aplogdate.isEnabled = true
+            aelogdate.title = "(AE)yyyyMMdd-HHmmss"
         }
         if(tag==1){
             logType = "-l"
             aplogdate.isEnabled = false
+            aelogdate.title = "(AE)yyyy-MM-dd HH/mm/ss"
         }
     }
     
@@ -97,6 +99,7 @@ class ViewController: NSViewController {
         password = psw.stringValue
         ipArr = ip.stringValue.components(separatedBy: ",")
         showmessage(inputString: "Start Program ... Total \(ipArr.count) IP")
+        var countnum = ipArr.count
         let sTime = dateFormatter2.string(from: startDate!)
         let eTime = dateFormatter2.string(from: endDate!)
         let targetplanfile = Bundle.main.path(forResource:"TargetPlan", ofType: "")!
@@ -109,17 +112,16 @@ class ViewController: NSViewController {
             showmessage(inputString: "\(indexnum) User: \(username), Password: \(password)")
             DispatchQueue.global().async {
                 self.queue.sync {
+                    self.showmessage(inputString: "\(indexnum) Upload TargetPlan")
                     let beforescp = Date()
                     self.scp(frompath: targetplanfile, topath: "/Users/\(self.username)/Downloads/",upload: true,ip: ipaddress)
                     let afterscp = Date()
                     let scptime = Int(afterscp.timeIntervalSince1970-beforescp.timeIntervalSince1970)
                     if scptime > 9{
                         self.showmessage(inputString: "\(indexnum) Build Connection Fail!")
+                        countnum = countnum - 1
                         return
                     }
-                }
-                self.showmessage(inputString: "\(indexnum) Upload TargetPlan")
-                self.queue.sync {
                     self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
                 }
                 self.showmessage(inputString: "\(indexnum) Start run TargetPlan...")
@@ -136,9 +138,14 @@ class ViewController: NSViewController {
                 self.showmessage(inputString: "\(indexnum) Remove unwanted files")
                 self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(logfile)", ip: ipaddress)
                 self.showmessage(inputString: "\(indexnum) Well Done!")
+                countnum = countnum - 1
+                if countnum == 0{
+                    DispatchQueue.main.async {
+                        self.exportBtn.isEnabled = true
+                    }
+                }
             }
         }
-        exportBtn.isEnabled = true
     }
     
     func scp(frompath:String ,topath:String, upload:Bool, ip:String) {
