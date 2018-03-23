@@ -41,7 +41,8 @@ class ViewController: NSViewController {
         startTime.stringValue = "\(dayFormatter.string(from: Date().addingTimeInterval(-7*3600*24)))00:00"
         startTime.isEnabled = false
         endTime.isEnabled = false
-        
+        let aepsw = AEPassword()
+        aepsw.askpassword()
     }
 
     override var representedObject: Any? {
@@ -92,6 +93,10 @@ class ViewController: NSViewController {
         let endDate = dateFormatter.date(from: endTime.stringValue)
         if startDate == nil || endDate == nil{
             showmessage(inputString: "Date format is error, please check.")
+            return
+        }
+        if ip.stringValue.count == 0{
+            showmessage(inputString: "No IP, please check.")
             return
         }
         exportBtn.isEnabled = false
