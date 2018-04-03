@@ -130,24 +130,40 @@ class ViewController: NSViewController {
                     self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
                 }
                 self.showmessage(inputString: "\(indexnum) Start run TargetPlan...")
-                var logfile = self.sshRun(command: "sh /Users/\(self.username)/Downloads/temp.sh",ip: ipaddress)
+                let logfile = self.sshRun(command: "/Users/\(self.username)/Downloads/temp.sh",ip: ipaddress)
                 if logfile.contains("No file match regex or time rule"){
                     self.showmessage(inputString: "\(indexnum) No file match regex or time rule")
                 }
-                logfile = self.findStringInString(str: logfile, pattern: ".*?.tar")
-                if logfile.count > 0{
-                    self.showmessage(inputString: "\(indexnum) Download \(logfile)")
+                var finallogfile = logfile.replacingOccurrences(of: "\r", with: "")
+                finallogfile = self.findStringInString(str: finallogfile, pattern: ".*?.tar")
+                if finallogfile.count > 0{
+                    self.showmessage(inputString: "\(indexnum) Download \(finallogfile)")
                     let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
-                    self.scp(frompath: logfile, topath: paths[0] as! String, upload: false, ip: ipaddress)
+                    self.scp(frompath: finallogfile, topath: paths[0] as! String, upload: false, ip: ipaddress)
                 }
                 self.showmessage(inputString: "\(indexnum) Remove unwanted files")
-                self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(logfile)", ip: ipaddress)
+                self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(finallogfile)", ip: ipaddress)
                 self.showmessage(inputString: "\(indexnum) Well Done!")
                 countnum = countnum - 1
                 if countnum == 0{
                     DispatchQueue.main.async {
                         self.exportBtn.isEnabled = true
                     }
+                }
+            }
+        }
+    }
+    
+    @IBAction func Debug(_ sender: NSButton) {
+        ipArr = ip.stringValue.components(separatedBy: ",")
+        username = user.stringValue
+        password = psw.stringValue
+        for (index, ipaddress) in ipArr.enumerated() {
+            let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
+            DispatchQueue.global().async {
+                self.queue.sync {
+                    self.sshRemove(path: "/Users/\(self.username)/Documents/Old.app /Users/\(self.username)/Documents/No Fail.app /Users/\(self.username)/Documents/PlistEditor.app", ip: ipaddress)
+                    self.showmessage(inputString: "\(indexnum) Remove files")
                 }
             }
         }

@@ -10,5 +10,5 @@ expect {
 }
 
 expect "WIKS*"
-send "rm $remove\r"
+send "rm -r $remove\r"
 expect eof

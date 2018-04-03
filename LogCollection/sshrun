@@ -3,12 +3,18 @@ set command [lindex $argv 0]
 set psw [lindex $argv 1]
 set command2 [lindex $argv 2]
 spawn  ssh $command
-
+set timeout 120
 expect {
 	"yes/no" { send "yes\r"; exp_continue}
     "*assword:" { send "$psw\r" }
 }
 
 expect "WIKS*"
-send "$command2\r"
+send "sh $command2\r"
+
+expect {
+    -re "tar" {
+        exit
+    }
+}
 expect eof
