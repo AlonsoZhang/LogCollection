@@ -23,17 +23,25 @@ class ViewController: NSViewController {
     @IBOutlet weak var nonelogdate: NSButton!
     @IBOutlet weak var tmpdir: NSButton!
     @IBOutlet weak var docum: NSButton!
+    @IBOutlet weak var killProgram: NSTextField!
+    @IBOutlet weak var uploadFile: NSTextField!
+    @IBOutlet var dragView: FileDragView!
+    @IBOutlet weak var uploadBtn: NSButton!
     
+    var file = ""
     var logType = "-t"
     var logDateFormat = "None"
     var username = ""
     var password = ""
     var ipArr:[String] = []
+    var ConfigPlist = [String: Any]()
     let dateFormatter = DateFormatter()
     let queue = DispatchQueue(label: "LogCollection.wistron", qos: DispatchQoS.default)
+    let aepsw = AEPassword()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.dragView.delegate = self
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let dayFormatter = DateFormatter()
         dayFormatter.dateFormat = "yyyy-MM-dd HH:"
@@ -41,8 +49,25 @@ class ViewController: NSViewController {
         startTime.stringValue = "\(dayFormatter.string(from: Date().addingTimeInterval(-7*3600*24)))00:00"
         startTime.isEnabled = false
         endTime.isEnabled = false
-        let aepsw = AEPassword()
-        aepsw.askpassword()
+        if #available(OSX 10.13, *) {
+            uploadBtn.isEnabled = false
+            uploadFile.isEditable = false
+        }
+        file = Bundle.main.path(forResource:"Config", ofType: "plist")!
+        ConfigPlist = NSDictionary(contentsOfFile: file)! as! [String : Any]
+        if ((ConfigPlist["LastOpen"]! as! String).count != 0){
+            let lastOpenDate = dateFormatter.date(from: (ConfigPlist["LastOpen"]! as! String))
+            let scptime = Int(Date().timeIntervalSince1970-(lastOpenDate?.timeIntervalSince1970)!)
+            if scptime > 3600*24*7{
+                aepsw.askpassword(0)
+                ConfigPlist["LastOpen"] = endTime.stringValue
+                NSDictionary(dictionary: ConfigPlist).write(toFile: file, atomically: true)
+            }
+        }else{
+            aepsw.askpassword(0)
+            ConfigPlist["LastOpen"] = endTime.stringValue
+            NSDictionary(dictionary: ConfigPlist).write(toFile: file, atomically: true)
+        }
     }
 
     override var representedObject: Any? {
@@ -95,14 +120,10 @@ class ViewController: NSViewController {
             showmessage(inputString: "Date format is error, please check.")
             return
         }
-        if ip.stringValue.count == 0{
-            showmessage(inputString: "No IP, please check.")
+        if !actionPrepare(){
             return
         }
         exportBtn.isEnabled = false
-        username = user.stringValue
-        password = psw.stringValue
-        ipArr = ip.stringValue.components(separatedBy: ",")
         showmessage(inputString: "Start Program ... Total \(ipArr.count) IP")
         var countnum = ipArr.count
         let sTime = dateFormatter2.string(from: startDate!)
@@ -154,19 +175,92 @@ class ViewController: NSViewController {
         }
     }
     
-    @IBAction func Debug(_ sender: NSButton) {
-        ipArr = ip.stringValue.components(separatedBy: ",")
-        username = user.stringValue
-        password = psw.stringValue
-        for (index, ipaddress) in ipArr.enumerated() {
-            let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
-            DispatchQueue.global().async {
-                self.queue.sync {
-                    self.sshRemove(path: "/Users/\(self.username)/Documents/Old.app /Users/\(self.username)/Documents/No Fail.app /Users/\(self.username)/Documents/PlistEditor.app", ip: ipaddress)
-                    self.showmessage(inputString: "\(indexnum) Remove files")
+    @IBAction func Kill(_ sender: NSButton) {
+        aepsw.askpassword(1)
+        if actionPrepare(){
+            if ipArr.count != 1{
+                showmessage(inputString: "Please Input Only One IP !!!")
+                return
+            }
+            let program = killProgram.stringValue
+            if program.count == 0{
+                showmessage(inputString: "Please Input program name!")
+                return
+            }
+            for (index, ipaddress) in ipArr.enumerated() {
+                let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
+                DispatchQueue.global().async {
+                    self.queue.sync {
+                        self.sshKill(app: program, ip: ipaddress)
+                        self.showmessage(inputString: "\(indexnum) Kill \(program)")
+                    }
                 }
             }
         }
+    }
+    
+    @IBAction func Open(_ sender: NSButton) {
+        if actionPrepare(){
+            let program = killProgram.stringValue
+            if program.count == 0{
+                showmessage(inputString: "Please Input program name!")
+                return
+            }
+            for (index, ipaddress) in ipArr.enumerated() {
+                let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
+                DispatchQueue.global().async {
+                    self.queue.sync {
+                        self.sshOpen(app: program, ip: ipaddress)
+                        self.showmessage(inputString: "\(indexnum) Open \(program)")
+                    }
+                }
+            }
+        }
+    }
+    
+    @IBAction func Upload(_ sender: NSButton) {
+        if actionPrepare(){
+            let uploadPath = uploadFile.stringValue
+            if uploadPath.count == 0{
+                showmessage(inputString: "Please Drag file to upload!")
+                return
+            }
+            for (index, ipaddress) in ipArr.enumerated() {
+                let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
+                DispatchQueue.global().async {
+                    self.queue.sync {
+                        self.scp(frompath: uploadPath, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
+                        self.showmessage(inputString: "\(indexnum) Upload files to Downloads")
+                    }
+                }
+            }
+        }
+    }
+    
+    @IBAction func Remove(_ sender: NSButton) {
+        if actionPrepare(){
+            for (index, ipaddress) in ipArr.enumerated() {
+                let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
+                DispatchQueue.global().async {
+                    self.queue.sync {
+                        self.sshRemove(path: "/Users/\(self.username)/Downloads/*", ip: ipaddress)
+                        //self.sshRemove(path: "/Users/\(self.username)/Documents/Old.app /Users/\(self.username)/Documents/No Fail.app /Users/\(self.username)/Documents/PlistEditor.app", ip: ipaddress)
+                        self.showmessage(inputString: "\(indexnum) Remove Downloads all files")
+                    }
+                }
+            }
+        }
+    }
+    
+    func actionPrepare() -> Bool {
+        if ip.stringValue.count == 0{
+            showmessage(inputString: "No IP, please check.")
+            return false
+        }
+        ipArr = ip.stringValue.components(separatedBy: ",")
+        username = user.stringValue
+        password = psw.stringValue
+        return true
     }
     
     func scp(frompath:String ,topath:String, upload:Bool, ip:String) {
@@ -220,6 +314,39 @@ class ViewController: NSViewController {
         return String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: String.Encoding.utf8)!
     }
     
+    func sshKill(app:String ,ip:String) {
+        let killfile = Bundle.main.path(forResource:"sshkill", ofType: "")!
+        var appstr = "";
+        if app.hasSuffix(".app"){
+            appstr = app.replacingOccurrences(of: ".app", with: "")
+        }else{
+            appstr = app
+        }
+        let task = Process()
+        task.launchPath = "/usr/bin/expect"
+        let arguments = ["\(killfile)","\(ip)","\(self.password)","\(self.username)","\(appstr)"]
+        task.arguments = arguments
+        task.launch()
+    }
+    
+    func sshOpen(app:String ,ip:String) {
+        var appstr = "";
+        if app.hasSuffix(".app"){
+            appstr = app
+        }else{
+            appstr = "\(app).app"
+        }
+        if appstr.components(separatedBy: "/").count < 3 {
+            appstr = "/Users/\(self.username)/Desktop/\(appstr)"
+        }
+        let openfile = Bundle.main.path(forResource:"sshopen", ofType: "")!
+        let task = Process()
+        task.launchPath = "/usr/bin/expect"
+        let arguments = ["\(openfile)","\(self.username)@\(ip)","\(self.password)","\(appstr)"]
+        task.arguments = arguments
+        task.launch()
+    }
+    
     var error: NSDictionary?
     @discardableResult
     func run(cmd:String) -> String {
@@ -270,6 +397,21 @@ class ViewController: NSViewController {
         {
             showmessage(inputString: "findStringInString Regex error")
             return ""
+        }
+    }
+}
+
+extension ViewController: FileDragDelegate {
+    func didFinishDrag(_ files:Array<Any>){
+        if files.count > 1 {
+            uploadFile.textColor = NSColor.red
+            uploadFile.stringValue = "Please drag one folder once !!!"
+            uploadBtn.isEnabled = false
+        }else{
+            uploadFile.textColor = NSColor.blue
+            let path = files[0]
+            uploadFile.stringValue = "\(path)"
+            uploadBtn.isEnabled = true
         }
     }
 }

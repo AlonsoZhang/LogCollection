@@ -15,6 +15,10 @@
 		E206A6A72057D7BA0004B686 /* sshrun in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A62057D7BA0004B686 /* sshrun */; };
 		E206A6A92057DCBA0004B686 /* ssh in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A82057DCBA0004B686 /* ssh */; };
 		E2938D6E205A535B00DC804A /* temp.sh in Resources */ = {isa = PBXBuildFile; fileRef = E2938D6D205A535B00DC804A /* temp.sh */; };
+		E2DD8691207EF6E000015767 /* sshkill in Resources */ = {isa = PBXBuildFile; fileRef = E2DD868F207EF6DF00015767 /* sshkill */; };
+		E2DD8694207F256C00015767 /* sshopen in Resources */ = {isa = PBXBuildFile; fileRef = E2DD8693207F256C00015767 /* sshopen */; };
+		E2DD8696207F33DB00015767 /* FileDragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DD8695207F33DB00015767 /* FileDragView.swift */; };
+		E2DD8698207F3F8600015767 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = E2DD8697207F3F8600015767 /* Config.plist */; };
 		E2DEC27D205B5A900081756B /* TargetPlan in Resources */ = {isa = PBXBuildFile; fileRef = E2DEC27C205B5A900081756B /* TargetPlan */; };
 		E2DEC27F205B920B0081756B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2DEC27E205B920B0081756B /* Assets.xcassets */; };
 		E2FD521720647FC50009C548 /* AEPassword.m in Sources */ = {isa = PBXBuildFile; fileRef = E2FD521620647FC50009C548 /* AEPassword.m */; };
@@ -32,6 +36,10 @@
 		E206A6A62057D7BA0004B686 /* sshrun */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshrun; sourceTree = "<group>"; };
 		E206A6A82057DCBA0004B686 /* ssh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ssh; sourceTree = "<group>"; };
 		E2938D6D205A535B00DC804A /* temp.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = temp.sh; sourceTree = "<group>"; };
+		E2DD868F207EF6DF00015767 /* sshkill */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshkill; sourceTree = "<group>"; };
+		E2DD8693207F256C00015767 /* sshopen */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshopen; sourceTree = "<group>"; };
+		E2DD8695207F33DB00015767 /* FileDragView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDragView.swift; sourceTree = "<group>"; };
+		E2DD8697207F3F8600015767 /* Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
 		E2DEC27C205B5A900081756B /* TargetPlan */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = TargetPlan; sourceTree = "<group>"; };
 		E2DEC27E205B920B0081756B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E2FD521420647FC50009C548 /* LogCollection-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LogCollection-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -73,19 +81,31 @@
 				E2FD521520647FC50009C548 /* AEPassword.h */,
 				E2FD521620647FC50009C548 /* AEPassword.m */,
 				E206A69220574EAE0004B686 /* ViewController.swift */,
+				E2DD8695207F33DB00015767 /* FileDragView.swift */,
 				E206A69620574EAE0004B686 /* Main.storyboard */,
+				E2DD8697207F3F8600015767 /* Config.plist */,
 				E206A69920574EAE0004B686 /* Info.plist */,
 				E206A69A20574EAE0004B686 /* LogCollection.entitlements */,
 				E2DEC27E205B920B0081756B /* Assets.xcassets */,
 				E2DEC27C205B5A900081756B /* TargetPlan */,
-				E206A6A42057CF5D0004B686 /* sshremove */,
-				E206A6A62057D7BA0004B686 /* sshrun */,
 				E2938D6D205A535B00DC804A /* temp.sh */,
-				E206A6A82057DCBA0004B686 /* ssh */,
-				E206A6A22057B5560004B686 /* scp */,
+				E2DD8692207F245B00015767 /* expect */,
 				E2FD521420647FC50009C548 /* LogCollection-Bridging-Header.h */,
 			);
 			path = LogCollection;
+			sourceTree = "<group>";
+		};
+		E2DD8692207F245B00015767 /* expect */ = {
+			isa = PBXGroup;
+			children = (
+				E206A6A22057B5560004B686 /* scp */,
+				E206A6A82057DCBA0004B686 /* ssh */,
+				E2DD868F207EF6DF00015767 /* sshkill */,
+				E206A6A62057D7BA0004B686 /* sshrun */,
+				E206A6A42057CF5D0004B686 /* sshremove */,
+				E2DD8693207F256C00015767 /* sshopen */,
+			);
+			path = expect;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,7 +176,10 @@
 				E2938D6E205A535B00DC804A /* temp.sh in Resources */,
 				E206A6A32057B5560004B686 /* scp in Resources */,
 				E206A6A52057CF5D0004B686 /* sshremove in Resources */,
+				E2DD8694207F256C00015767 /* sshopen in Resources */,
+				E2DD8698207F3F8600015767 /* Config.plist in Resources */,
 				E2DEC27D205B5A900081756B /* TargetPlan in Resources */,
+				E2DD8691207EF6E000015767 /* sshkill in Resources */,
 				E206A6A72057D7BA0004B686 /* sshrun in Resources */,
 				E206A6A92057DCBA0004B686 /* ssh in Resources */,
 				E2DEC27F205B920B0081756B /* Assets.xcassets in Resources */,
@@ -173,6 +196,7 @@
 			files = (
 				E206A69320574EAE0004B686 /* ViewController.swift in Sources */,
 				E206A69120574EAE0004B686 /* AppDelegate.swift in Sources */,
+				E2DD8696207F33DB00015767 /* FileDragView.swift in Sources */,
 				E2FD521720647FC50009C548 /* AEPassword.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

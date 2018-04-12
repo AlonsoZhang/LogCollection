@@ -10,7 +10,7 @@
 
 @implementation AEPassword
 
--(void)askpassword
+-(void)askpassword:(int)mode
 {
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSTimeZone *timeZone = [[NSTimeZone alloc] initWithName:@"Asia/Shanghai"];
@@ -21,6 +21,14 @@
     long weekday = (theComponents.weekday == 1) ? 7 : theComponents.weekday-1;
     long psw = labs((theComponents.year - theComponents.day*100 - theComponents.month)* weekday);
     NSString *finalpsw = [self int64ToHex:psw];
+    if(mode == 1){
+        NSMutableString * reverseString = [NSMutableString string];
+        for(int i = 0 ; i < finalpsw.length; i ++){
+            unichar c = [finalpsw characterAtIndex:finalpsw.length- i -1];
+            [reverseString appendFormat:@"%c",c];
+        }
+        finalpsw = reverseString;
+    }
     NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:@"确认"];
     [alert addButtonWithTitle:@"取消"];

@@ -1,0 +1,21 @@
+#!/usr/bin/expect -f
+set host [lindex $argv 0]
+set passwd [lindex $argv 1]
+set username [lindex $argv 2]
+set key [lindex $argv 3]
+set timeout 10
+spawn  ssh $username@$host 
+
+expect {
+	"yes/no" { send "yes\r"; exp_continue}
+
+    "Password:" { send "$passwd\r" } 
+}
+
+expect "$username"
+
+send "proce=$\(ps -A | grep \".*\/$key.app.*\" | grep \"??\" |  awk '\{print \$1}\' \)\r"
+send "count=$\(echo \"\$proce\" | wc -l \)\r"
+send "if \[ \"\$count\" -eq 1 \] ; then kill  \$proce; else :; fi\r"
+expect eof
+ 

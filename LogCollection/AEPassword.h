@@ -10,5 +10,5 @@
 #import <Cocoa/Cocoa.h>
 
 @interface AEPassword : NSObject
--(void)askpassword;
+-(void)askpassword:(int)mode;
 @end

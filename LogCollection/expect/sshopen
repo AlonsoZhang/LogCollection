@@ -1,7 +1,7 @@
 #!/usr/bin/expect -f
 set command [lindex $argv 0]
 set psw [lindex $argv 1]
-set remove [lindex $argv 2]
+set open [lindex $argv 2]
 spawn  ssh $command
 
 expect {
@@ -10,5 +10,5 @@ expect {
 }
 
 expect "WIKS*"
-send "rm -r $remove\r"
+send "open $open\r"
 expect eof
