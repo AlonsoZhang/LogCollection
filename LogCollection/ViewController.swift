@@ -136,6 +136,7 @@ class ViewController: NSViewController {
         for (index, ipaddress) in ipArr.enumerated() {
             let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
             showmessage(inputString: "\(indexnum) User: \(username), Password: \(password)")
+            var returnflag = false
             DispatchQueue.global().async {
                 self.queue.sync {
                     self.showmessage(inputString: "\(indexnum) Upload TargetPlan")
@@ -146,26 +147,29 @@ class ViewController: NSViewController {
                     if scptime > 9{
                         self.showmessage(inputString: "\(indexnum) Build Connection Fail!")
                         countnum = countnum - 1
+                        returnflag = true
                         return
                     }
                     self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
                 }
-                self.showmessage(inputString: "\(indexnum) Start run TargetPlan...")
-                let logfile = self.sshRun(command: "/Users/\(self.username)/Downloads/temp.sh",ip: ipaddress)
-                if logfile.contains("No file match regex or time rule"){
-                    self.showmessage(inputString: "\(indexnum) No file match regex or time rule")
+                if !returnflag{
+                    self.showmessage(inputString: "\(indexnum) Start run TargetPlan...")
+                    let logfile = self.sshRun(command: "/Users/\(self.username)/Downloads/temp.sh",ip: ipaddress)
+                    if logfile.contains("No file match regex or time rule"){
+                        self.showmessage(inputString: "\(indexnum) No file match regex or time rule")
+                    }
+                    var finallogfile = logfile.replacingOccurrences(of: "\r", with: "")
+                    finallogfile = self.findStringInString(str: finallogfile, pattern: ".*?.tar")
+                    if finallogfile.count > 0{
+                        self.showmessage(inputString: "\(indexnum) Download \(finallogfile)")
+                        let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
+                        self.scp(frompath: finallogfile, topath: paths[0] as! String, upload: false, ip: ipaddress)
+                    }
+                    self.showmessage(inputString: "\(indexnum) Remove unwanted files")
+                    self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(finallogfile)", ip: ipaddress)
+                    self.showmessage(inputString: "\(indexnum) Well Done!")
+                    countnum = countnum - 1
                 }
-                var finallogfile = logfile.replacingOccurrences(of: "\r", with: "")
-                finallogfile = self.findStringInString(str: finallogfile, pattern: ".*?.tar")
-                if finallogfile.count > 0{
-                    self.showmessage(inputString: "\(indexnum) Download \(finallogfile)")
-                    let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
-                    self.scp(frompath: finallogfile, topath: paths[0] as! String, upload: false, ip: ipaddress)
-                }
-                self.showmessage(inputString: "\(indexnum) Remove unwanted files")
-                self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(finallogfile)", ip: ipaddress)
-                self.showmessage(inputString: "\(indexnum) Well Done!")
-                countnum = countnum - 1
                 if countnum == 0{
                     DispatchQueue.main.async {
                         self.exportBtn.isEnabled = true
@@ -268,10 +272,10 @@ class ViewController: NSViewController {
         let task = Process()
         task.launchPath = "/usr/bin/expect"
         if upload{
-            let arguments = ["\(scpfile)","\(frompath)","\(self.username)@\(ip):\(topath)","\(self.password)"]
+            let arguments = ["\(scpfile)","\(frompath)","\(self.username)@\(ip):\(topath)","\(self.password)","10"]
             task.arguments = arguments
         }else{
-            let arguments = ["\(scpfile)","\(self.username)@\(ip):\(frompath)","\(topath)","\(self.password)"]
+            let arguments = ["\(scpfile)","\(self.username)@\(ip):\(frompath)","\(topath)","\(self.password)","1000"]
             task.arguments = arguments
         }
         task.launch()
