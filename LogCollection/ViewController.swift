@@ -27,6 +27,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var uploadFile: NSTextField!
     @IBOutlet var dragView: FileDragView!
     @IBOutlet weak var uploadBtn: NSButton!
+    @IBOutlet weak var scpPath: NSTextField!
     
     var file = ""
     var logType = "-t"
@@ -254,6 +255,15 @@ class ViewController: NSViewController {
                 }
             }
         }
+    }
+    
+    @IBAction func QuickExport(_ sender: NSButton) {
+    }
+    
+    @IBAction func ScreenCapture(_ sender: NSButton) {
+    }
+    
+    @IBAction func OpenSSH(_ sender: NSButton) {
     }
     
     func actionPrepare() -> Bool {
