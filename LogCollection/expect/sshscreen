@@ -1,19 +1,14 @@
 #!/usr/bin/expect -f
 set command [lindex $argv 0]
 set psw [lindex $argv 1]
-set timeout 2
+set pic [lindex $argv 2]
 spawn  ssh $command
 
 expect {
-	"yes/no" { send "yes\r"}
-
+	"yes/no" { send "yes\r"; exp_continue}
     "*assword:" { send "$psw\r" }
 }
 
-expect {
-"yes/no" { send "yes\r"}
-
-"*assword:" { send "$psw\r" }
-}
-
-interact
+expect "WIKS*"
+send "screencapture -C $pic\r"
+expect eof

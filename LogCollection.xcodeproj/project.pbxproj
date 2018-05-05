@@ -13,6 +13,7 @@
 		E206A6A52057CF5D0004B686 /* sshremove in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A42057CF5D0004B686 /* sshremove */; };
 		E206A6A72057D7BA0004B686 /* sshrun in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A62057D7BA0004B686 /* sshrun */; };
 		E206A6A92057DCBA0004B686 /* ssh in Resources */ = {isa = PBXBuildFile; fileRef = E206A6A82057DCBA0004B686 /* ssh */; };
+		E2351B85209D7EC800E08652 /* sshscreen in Resources */ = {isa = PBXBuildFile; fileRef = E2351B84209D7EC800E08652 /* sshscreen */; };
 		E27413FF2088379A002E4A4D /* scp in Resources */ = {isa = PBXBuildFile; fileRef = E27413FE2088379A002E4A4D /* scp */; };
 		E2938D6E205A535B00DC804A /* temp.sh in Resources */ = {isa = PBXBuildFile; fileRef = E2938D6D205A535B00DC804A /* temp.sh */; };
 		E2DD8691207EF6E000015767 /* sshkill in Resources */ = {isa = PBXBuildFile; fileRef = E2DD868F207EF6DF00015767 /* sshkill */; };
@@ -34,6 +35,7 @@
 		E206A6A42057CF5D0004B686 /* sshremove */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshremove; sourceTree = "<group>"; };
 		E206A6A62057D7BA0004B686 /* sshrun */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshrun; sourceTree = "<group>"; };
 		E206A6A82057DCBA0004B686 /* ssh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ssh; sourceTree = "<group>"; };
+		E2351B84209D7EC800E08652 /* sshscreen */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshscreen; sourceTree = "<group>"; };
 		E27413FE2088379A002E4A4D /* scp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scp; sourceTree = "<group>"; };
 		E2938D6D205A535B00DC804A /* temp.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = temp.sh; sourceTree = "<group>"; };
 		E2DD868F207EF6DF00015767 /* sshkill */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sshkill; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				E2DD868F207EF6DF00015767 /* sshkill */,
 				E206A6A62057D7BA0004B686 /* sshrun */,
 				E206A6A42057CF5D0004B686 /* sshremove */,
+				E2351B84209D7EC800E08652 /* sshscreen */,
 				E2DD8693207F256C00015767 /* sshopen */,
 			);
 			path = expect;
@@ -180,6 +183,7 @@
 				E2DEC27D205B5A900081756B /* TargetPlan in Resources */,
 				E2DD8691207EF6E000015767 /* sshkill in Resources */,
 				E206A6A72057D7BA0004B686 /* sshrun in Resources */,
+				E2351B85209D7EC800E08652 /* sshscreen in Resources */,
 				E206A6A92057DCBA0004B686 /* ssh in Resources */,
 				E27413FF2088379A002E4A4D /* scp in Resources */,
 				E2DEC27F205B920B0081756B /* Assets.xcassets in Resources */,

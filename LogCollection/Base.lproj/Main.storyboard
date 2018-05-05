@@ -1062,7 +1062,7 @@
                             </textField>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gok-El-kan">
                                 <rect key="frame" x="56" y="177" width="401" height="22"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Uxw-oi-8Re">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" title="/Users/gdlocal/Documents/" drawsBackground="YES" id="Uxw-oi-8Re">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1176,6 +1176,7 @@
                         <outlet property="killProgram" destination="dUY-QY-8is" id="0Ta-X0-Jia"/>
                         <outlet property="nonelogdate" destination="Ab7-t8-tyE" id="ecB-wh-x5w"/>
                         <outlet property="psw" destination="Tbx-3K-lbT" id="f9o-vc-jhA"/>
+                        <outlet property="qexportBtn" destination="4Bl-az-FNd" id="XeH-Rl-GIZ"/>
                         <outlet property="scpPath" destination="gok-El-kan" id="gVH-38-LxZ"/>
                         <outlet property="scrollview" destination="NIm-o3-UsL" id="2s1-Ps-49K"/>
                         <outlet property="startTime" destination="5ml-bd-Rv6" id="mqv-hc-ep4"/>

@@ -28,6 +28,7 @@ class ViewController: NSViewController {
     @IBOutlet var dragView: FileDragView!
     @IBOutlet weak var uploadBtn: NSButton!
     @IBOutlet weak var scpPath: NSTextField!
+    @IBOutlet weak var qexportBtn: NSButton!
     
     var file = ""
     var logType = "-t"
@@ -39,6 +40,8 @@ class ViewController: NSViewController {
     let dateFormatter = DateFormatter()
     let queue = DispatchQueue(label: "LogCollection.wistron", qos: DispatchQoS.default)
     let aepsw = AEPassword()
+    let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
+    var downloadpath = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,6 +57,7 @@ class ViewController: NSViewController {
             uploadBtn.isEnabled = false
             uploadFile.isEditable = false
         }
+        downloadpath = paths[0] as! String
         file = Bundle.main.path(forResource:"Config", ofType: "plist")!
         ConfigPlist = NSDictionary(contentsOfFile: file)! as! [String : Any]
         if ((ConfigPlist["LastOpen"]! as! String).count != 0){
@@ -163,8 +167,7 @@ class ViewController: NSViewController {
                     finallogfile = self.findStringInString(str: finallogfile, pattern: ".*?.tar")
                     if finallogfile.count > 0{
                         self.showmessage(inputString: "\(indexnum) Download \(finallogfile)")
-                        let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
-                        self.scp(frompath: finallogfile, topath: paths[0] as! String, upload: false, ip: ipaddress)
+                        self.scp(frompath: finallogfile, topath: self.downloadpath, upload: false, ip: ipaddress)
                     }
                     self.showmessage(inputString: "\(indexnum) Remove unwanted files")
                     self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(finallogfile)", ip: ipaddress)
@@ -258,12 +261,60 @@ class ViewController: NSViewController {
     }
     
     @IBAction func QuickExport(_ sender: NSButton) {
+        if actionPrepare(){
+            let scppath = self.scpPath.stringValue
+            var countnum = ipArr.count
+            qexportBtn.isEnabled = false
+            showmessage(inputString: "Start Quick Export ... Total \(ipArr.count) IP")
+            for (index, ipaddress) in ipArr.enumerated() {
+                let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
+                DispatchQueue.global().async {
+                    self.scp(frompath: "\(scppath)", topath: "\(self.downloadpath)/\(ipaddress)", upload: false, ip: ipaddress)
+                    self.showmessage(inputString: "\(indexnum) scp files from \(scppath)")
+                    self.queue.sync {
+                        countnum = countnum - 1
+                        if countnum == 0{
+                            DispatchQueue.main.async {
+                                self.qexportBtn.isEnabled = true
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     @IBAction func ScreenCapture(_ sender: NSButton) {
+        if actionPrepare(){
+            showmessage(inputString: "Start Screen Capture ... Total \(ipArr.count) IP")
+            for (index, ipaddress) in ipArr.enumerated() {
+                let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
+                DispatchQueue.global().async {
+                    let picFormatter = DateFormatter()
+                    picFormatter.dateFormat = "yyyyMMddHHmmss"
+                    let picpath = "/Users/\(self.username)/Downloads/\(ipaddress)-\(picFormatter.string(from: Date())).png"
+                    self.sshScreenCapture(picname: picpath, ip: ipaddress)
+                    self.scp(frompath: "\(picpath)", topath: "\(self.downloadpath)", upload: false, ip: ipaddress)
+                    self.sshRemove(path: "\(picpath)", ip: ipaddress)
+                    self.showmessage(inputString: "\(indexnum) Screen Capture")
+                }
+            }
+        }
     }
     
     @IBAction func OpenSSH(_ sender: NSButton) {
+        if actionPrepare(){
+            let sshfile = Bundle.main.path(forResource:"ssh", ofType: "")!
+            for (_, ipaddress) in ipArr.enumerated() {
+                DispatchQueue.global().async {
+                    self.queue.sync {
+                        let script = NSAppleScript.init(source: "tell application \"Terminal\" \n activate \n do script \"\(sshfile) \(self.username)@\(ipaddress) \(self.password)\" \n end tell")
+                        script?.executeAndReturnError(&self.error)
+                        self.showmessage(inputString: "\(ipaddress) open ssh")
+                    }
+                }
+            }
+        }
     }
     
     func actionPrepare() -> Bool {
@@ -326,6 +377,16 @@ class ViewController: NSViewController {
         task.launch()
         task.waitUntilExit()
         return String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: String.Encoding.utf8)!
+    }
+    
+    func sshScreenCapture(picname:String, ip:String) {
+        let sshremovefile = Bundle.main.path(forResource:"sshscreen", ofType: "")!
+        let task = Process()
+        task.launchPath = "/usr/bin/expect"
+        let arguments = ["\(sshremovefile)","\(self.username)@\(ip)","\(self.password)","\(picname)"]
+        task.arguments = arguments
+        task.launch()
+        task.waitUntilExit()
     }
     
     func sshKill(app:String ,ip:String) {
