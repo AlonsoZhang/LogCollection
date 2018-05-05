@@ -6,7 +6,7 @@
 
 首次启动密码为AE Password所生成的密码，有效期为七天。
 
-###各按钮功能
+## 各按钮功能
 1. Log Path: TMPDIR为系统缓存中的log，Mac Mini重启后会清空。Documents为程序写在本地的log，通常在/Users/gdlocal/Documents/中。
 2. Log DateFormat: 默认为第三项(All)None，为打包整个TMPDIR文件夹或者Documents文件夹。当需要按时间下载时可以点击前两项，AE和AP站的格式不同，按需选择。
 3. Time Section: 当选择DateFormat之后，该项可以设定所需要的测试log开始和结束的时间，请在原格式上进行修改。
