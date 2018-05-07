@@ -1178,6 +1178,7 @@
                         <outlet property="psw" destination="Tbx-3K-lbT" id="f9o-vc-jhA"/>
                         <outlet property="qexportBtn" destination="4Bl-az-FNd" id="XeH-Rl-GIZ"/>
                         <outlet property="scpPath" destination="gok-El-kan" id="gVH-38-LxZ"/>
+                        <outlet property="screenBtn" destination="2Jb-tx-yyx" id="AxZ-ss-rS7"/>
                         <outlet property="scrollview" destination="NIm-o3-UsL" id="2s1-Ps-49K"/>
                         <outlet property="startTime" destination="5ml-bd-Rv6" id="mqv-hc-ep4"/>
                         <outlet property="tmpdir" destination="qS6-0z-2Nu" id="W14-k0-KgQ"/>

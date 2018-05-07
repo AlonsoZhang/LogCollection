@@ -23,4 +23,5 @@
 13. Open SSH: 打开terminal，进入对应ip的SSH，获得控制权，供手动下指令完成之后动作。
 
 *PS: 关于ip，在NewOpenVNC中点击打开屏幕共享时会自动复制当站ip，点击线名时可以选择复制整条线的ip，供该Tool使用。*
+
 ![Openvncip.png](http://www.zhangwu.tech/Openvncip.png)

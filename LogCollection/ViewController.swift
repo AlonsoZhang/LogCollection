@@ -29,6 +29,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var uploadBtn: NSButton!
     @IBOutlet weak var scpPath: NSTextField!
     @IBOutlet weak var qexportBtn: NSButton!
+    @IBOutlet weak var screenBtn: NSButton!
     
     var file = ""
     var logType = "-t"
@@ -269,7 +270,11 @@ class ViewController: NSViewController {
             for (index, ipaddress) in ipArr.enumerated() {
                 let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
                 DispatchQueue.global().async {
-                    self.scp(frompath: "\(scppath)", topath: "\(self.downloadpath)/\(ipaddress)/", upload: false, ip: ipaddress)
+                    let myDirectory:String = "\(self.downloadpath)/\(ipaddress)/"
+                    let fileManager = FileManager.default
+                    try! fileManager.createDirectory(atPath: myDirectory,
+                                                     withIntermediateDirectories: true, attributes: nil)
+                    self.scp(frompath: "\(scppath)", topath: myDirectory, upload: false, ip: ipaddress)
                     self.showmessage(inputString: "\(indexnum) scp files from \(scppath)")
                     self.queue.sync {
                         countnum = countnum - 1
@@ -287,6 +292,8 @@ class ViewController: NSViewController {
     @IBAction func ScreenCapture(_ sender: NSButton) {
         if actionPrepare(){
             showmessage(inputString: "Start Screen Capture ... Total \(ipArr.count) IP")
+            var countnum = ipArr.count
+            screenBtn.isEnabled = false
             for (index, ipaddress) in ipArr.enumerated() {
                 let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
                 DispatchQueue.global().async {
@@ -297,6 +304,14 @@ class ViewController: NSViewController {
                     self.scp(frompath: "\(picpath)", topath: "\(self.downloadpath)", upload: false, ip: ipaddress)
                     self.sshRemove(path: "\(picpath)", ip: ipaddress)
                     self.showmessage(inputString: "\(indexnum) Screen Capture")
+                    self.queue.sync {
+                        countnum = countnum - 1
+                        if countnum == 0{
+                            DispatchQueue.main.async {
+                                self.screenBtn.isEnabled = true
+                            }
+                        }
+                    }
                 }
             }
         }
