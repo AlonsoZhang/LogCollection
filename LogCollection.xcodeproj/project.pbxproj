@@ -340,7 +340,7 @@
 				INFOPLIST_FILE = LogCollection/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = wistron.LogCollection;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.zhangwu.LogCollection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "LogCollection/LogCollection-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -359,7 +359,7 @@
 				INFOPLIST_FILE = LogCollection/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = wistron.LogCollection;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.zhangwu.LogCollection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "LogCollection/LogCollection-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;

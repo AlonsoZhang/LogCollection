@@ -38,7 +38,7 @@ class ViewController: NSViewController {
     var ipArr:[String] = []
     var ConfigPlist = [String: Any]()
     let dateFormatter = DateFormatter()
-    let queue = DispatchQueue(label: "LogCollection.wistron", qos: DispatchQoS.default)
+    let queue = DispatchQueue(label: "LogCollection", qos: DispatchQoS.default)
     let aepsw = AEPassword()
     let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
     var downloadpath = ""
@@ -269,7 +269,7 @@ class ViewController: NSViewController {
             for (index, ipaddress) in ipArr.enumerated() {
                 let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
                 DispatchQueue.global().async {
-                    self.scp(frompath: "\(scppath)", topath: "\(self.downloadpath)/\(ipaddress)", upload: false, ip: ipaddress)
+                    self.scp(frompath: "\(scppath)", topath: "\(self.downloadpath)/\(ipaddress)/", upload: false, ip: ipaddress)
                     self.showmessage(inputString: "\(indexnum) scp files from \(scppath)")
                     self.queue.sync {
                         countnum = countnum - 1
