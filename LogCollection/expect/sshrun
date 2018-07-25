@@ -16,5 +16,11 @@ expect {
     -re "tar" {
         exit
     }
+    -re "csv" {
+        exit
+    }
+    -re "Error" {
+        exit
+    }
 }
 expect eof

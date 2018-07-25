@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>MMV</key>
+	<dict>
+		<key>IncludeString</key>
+		<string>SET SN$Start Test Item [4]$Uppdca: YES</string>
+		<key>ExcludeString</key>
+		<string></string>
+		<key>StartString</key>
+		<string>Product    : ++$Station ID : ++$SET SN : ++$Start Test Item [4]++$Receive Response =&gt; ++13$TestResult : ++</string>
+		<key>EndString</key>
+		<string>[++$[++$IP++$=++$,@++$;++</string>
+		<key>LogFormat</key>
+		<string>(Site)WIKS$(Product)[0]$(SerialNumber)[2]$(Station ID)[1]$(Test Pass/Fail Status)[5]$(Parametric)[4]</string>
+	</dict>
+</dict>
+</plist>

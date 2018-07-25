@@ -4,5 +4,7 @@
 <dict>
 	<key>LastOpen</key>
 	<string></string>
+	<key>AutoRun</key>
+	<false/>
 </dict>
 </plist>

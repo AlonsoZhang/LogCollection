@@ -43,6 +43,7 @@ class ViewController: NSViewController {
     let aepsw = AEPassword()
     let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
     var downloadpath = ""
+    var auto = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,11 +75,56 @@ class ViewController: NSViewController {
             ConfigPlist["LastOpen"] = endTime.stringValue
             NSDictionary(dictionary: ConfigPlist).write(toFile: file, atomically: true)
         }
+        auto = ConfigPlist["AutoRun"] as! Bool
+        if auto{
+            autoRun()
+        }
     }
 
     override var representedObject: Any? {
         didSet {
         }
+    }
+    
+    func autoRun(){
+        logType = "-l"
+        logDateFormat = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}"
+        ip.stringValue = "172.17.72.109"
+        let hourFormatter = DateFormatter()
+        hourFormatter.dateFormat = "mm:ss"
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        var going = true
+        DispatchTimer(timeInterval: 1) { (timer) in
+            let nowtime = hourFormatter.string(from: Date())
+            //self.showmessage(inputString: nowtime)
+            if nowtime.suffix(2) == "00" && going{
+                going = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    going = true
+                }
+                if Int(nowtime.prefix(2))!%5 == 0{
+                    self.endTime.stringValue = "\(dayFormatter.string(from: Date())):00"
+                    self.startTime.stringValue = "\(dayFormatter.string(from: Date().addingTimeInterval(-300))):00"
+                    self.export(self.exportBtn)
+                }
+            }
+        }
+    }
+    
+    /// GCD定时器循环操作
+    ///   - timeInterval: 循环间隔时间
+    ///   - handler: 循环事件
+    public func DispatchTimer(timeInterval: Double, handler:@escaping (DispatchSourceTimer?)->())
+    {
+        let timer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.main)
+        timer.schedule(deadline: .now(), repeating: timeInterval)
+        timer.setEventHandler {
+            DispatchQueue.main.async {
+                handler(timer)
+            }
+        }
+        timer.resume()
     }
 
     @IBAction func chooseLogPathAction(_ sender: NSButton) {
@@ -136,7 +182,11 @@ class ViewController: NSViewController {
         let eTime = dateFormatter2.string(from: endDate!)
         let targetplanfile = Bundle.main.path(forResource:"TargetPlan", ofType: "")!
         let newlogDateFormat = self.logDateFormat.replacingOccurrences(of: "\\", with: "\\\\")
-        let cmd = "/Users/\(self.username)/Downloads/TargetPlan \(self.logType) \(newlogDateFormat) \(sTime) \(eTime)"
+        var cmd = "/Users/\(self.username)/Downloads/TargetPlan \(self.logType) \(newlogDateFormat) \(sTime) \(eTime)"
+        let getLogDataplist = Bundle.main.path(forResource:"getLogData", ofType: "plist")!
+        if auto{
+            cmd.append(" csv")
+        }
         let tempsh = Bundle.main.path(forResource:"temp", ofType: "sh")!
         try! cmd.write(toFile: tempsh, atomically: true, encoding: String.Encoding.utf8)
         for (index, ipaddress) in ipArr.enumerated() {
@@ -157,6 +207,9 @@ class ViewController: NSViewController {
                         return
                     }
                     self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
+                    if self.auto{
+                        self.scp(frompath: getLogDataplist, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
+                    }
                 }
                 if !returnflag{
                     self.showmessage(inputString: "\(indexnum) Start run TargetPlan...")
@@ -164,14 +217,24 @@ class ViewController: NSViewController {
                     if logfile.contains("No file match regex or time rule"){
                         self.showmessage(inputString: "\(indexnum) No file match regex or time rule")
                     }
+                    if logfile.contains("Error"){
+                        self.showmessage(inputString:logfile)
+                    }
                     var finallogfile = logfile.replacingOccurrences(of: "\r", with: "")
-                    finallogfile = self.findStringInString(str: finallogfile, pattern: ".*?.tar")
+                    if self.auto{
+                        finallogfile = self.findStringInString(str: finallogfile, pattern: ".*?.csv")
+                    }else{
+                        finallogfile = self.findStringInString(str: finallogfile, pattern: ".*?.tar")
+                    }
                     if finallogfile.count > 0{
                         self.showmessage(inputString: "\(indexnum) Download \(finallogfile)")
                         self.scp(frompath: finallogfile, topath: self.downloadpath, upload: false, ip: ipaddress)
                     }
                     self.showmessage(inputString: "\(indexnum) Remove unwanted files")
                     self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(finallogfile)", ip: ipaddress)
+                    if self.auto{
+                        self.sshRemove(path: "/Users/\(self.username)/Downloads/getLogData.plist", ip: ipaddress)
+                    }
                     self.showmessage(inputString: "\(indexnum) Well Done!")
                     countnum = countnum - 1
                 }
