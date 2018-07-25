@@ -875,7 +875,7 @@
                                 </constraints>
                             </box>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SNM-Qs-U86">
-                                <rect key="frame" x="56" y="251" width="671" height="22"/>
+                                <rect key="frame" x="56" y="251" width="664" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" placeholderString="Please Input IP separated by a comma" drawsBackground="YES" id="Xce-BO-bdK">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -970,10 +970,7 @@
                                 </view>
                             </box>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KaT-YL-dx9">
-                                <rect key="frame" x="731" y="244" width="82" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="70" id="RCR-QP-t7h"/>
-                                </constraints>
+                                <rect key="frame" x="724" y="244" width="89" height="32"/>
                                 <buttonCell key="cell" type="push" title="Export" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uUZ-jf-RAF">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1015,25 +1012,15 @@
                                 </connections>
                             </button>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1FC-RX-Iom">
-                                <rect key="frame" x="336" y="215" width="306" height="22"/>
+                                <rect key="frame" x="336" y="215" width="205" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" placeholderString="Drag upload file here" drawsBackground="YES" id="uaJ-Ci-APy">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button toolTip="Remove Downloads Files" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qUG-An-OUB">
-                                <rect key="frame" x="731" y="209" width="82" height="32"/>
-                                <buttonCell key="cell" type="push" title="Remove" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0pb-id-xio">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="Remove:" target="XfG-lQ-9wD" id="6Ks-p6-keA"/>
-                                </connections>
-                            </button>
                             <button toolTip="Upload File to Downloads" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jpy-Jn-Opc">
-                                <rect key="frame" x="651" y="209" width="82" height="32"/>
+                                <rect key="frame" x="550" y="208" width="89" height="32"/>
                                 <buttonCell key="cell" type="push" title="Upload" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MnK-o6-fWx">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1061,7 +1048,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gok-El-kan">
-                                <rect key="frame" x="56" y="177" width="401" height="22"/>
+                                <rect key="frame" x="56" y="177" width="400" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" title="/Users/gdlocal/Documents/" drawsBackground="YES" id="Uxw-oi-8Re">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -1069,10 +1056,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2Jb-tx-yyx">
-                                <rect key="frame" x="581" y="171" width="122" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="110" id="guu-oU-78E"/>
-                                </constraints>
+                                <rect key="frame" x="577" y="171" width="135" height="32"/>
                                 <buttonCell key="cell" type="push" title="Screen Capture" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="U3x-We-Q4N">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1082,10 +1066,7 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BJm-XD-zhK">
-                                <rect key="frame" x="711" y="171" width="102" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="90" id="t5G-kf-o7n"/>
-                                </constraints>
+                                <rect key="frame" x="710" y="171" width="103" height="32"/>
                                 <buttonCell key="cell" type="push" title="Open SSH" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cKx-Xt-K0L">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1095,16 +1076,33 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4Bl-az-FNd">
-                                <rect key="frame" x="461" y="171" width="112" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="100" id="td9-ed-qtR"/>
-                                </constraints>
+                                <rect key="frame" x="460" y="171" width="119" height="32"/>
                                 <buttonCell key="cell" type="push" title="Quick Export" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="aPJ-Yh-Sd8">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="QuickExport:" target="XfG-lQ-9wD" id="cAI-zu-nMQ"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="J0V-Io-tWh">
+                                <rect key="frame" x="724" y="208" width="89" height="32"/>
+                                <buttonCell key="cell" type="push" title="Replace" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5zo-Gq-PoX">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="Replace:" target="XfG-lQ-9wD" id="4VI-ta-ahv"/>
+                                </connections>
+                            </button>
+                            <button toolTip="Remove Downloads Files" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qUG-An-OUB">
+                                <rect key="frame" x="637" y="208" width="89" height="32"/>
+                                <buttonCell key="cell" type="push" title="Remove" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0pb-id-xio">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="Remove:" target="XfG-lQ-9wD" id="6Ks-p6-keA"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1129,12 +1127,13 @@
                             <constraint firstItem="1FC-RX-Iom" firstAttribute="centerY" secondItem="N5m-jx-FI1" secondAttribute="centerY" id="Nae-db-yrX"/>
                             <constraint firstItem="qUG-An-OUB" firstAttribute="centerY" secondItem="Jpy-Jn-Opc" secondAttribute="centerY" id="QP8-Pd-5JF"/>
                             <constraint firstItem="SNM-Qs-U86" firstAttribute="leading" secondItem="BjW-CD-37k" secondAttribute="trailing" constant="20" id="QPh-Wi-leZ"/>
-                            <constraint firstItem="2Jb-tx-yyx" firstAttribute="leading" secondItem="4Bl-az-FNd" secondAttribute="trailing" constant="20" id="RFy-Lz-Tny"/>
+                            <constraint firstItem="2Jb-tx-yyx" firstAttribute="leading" secondItem="4Bl-az-FNd" secondAttribute="trailing" constant="10" id="RFy-Lz-Tny"/>
                             <constraint firstItem="SNM-Qs-U86" firstAttribute="centerY" secondItem="BjW-CD-37k" secondAttribute="centerY" id="Sl5-yW-AN4"/>
                             <constraint firstItem="3aG-Wn-dBF" firstAttribute="leading" secondItem="ljz-Rf-E9x" secondAttribute="trailing" constant="20" id="TZS-hj-Iyr"/>
                             <constraint firstItem="Qdx-Rh-ZpA" firstAttribute="leading" secondItem="3aG-Wn-dBF" secondAttribute="trailing" constant="20" id="UYg-mN-MVF"/>
-                            <constraint firstItem="BJm-XD-zhK" firstAttribute="leading" secondItem="2Jb-tx-yyx" secondAttribute="trailing" constant="20" id="Ub9-gg-I4z"/>
+                            <constraint firstItem="BJm-XD-zhK" firstAttribute="leading" secondItem="2Jb-tx-yyx" secondAttribute="trailing" constant="10" id="Ub9-gg-I4z"/>
                             <constraint firstAttribute="trailing" secondItem="BJm-XD-zhK" secondAttribute="trailing" constant="20" id="VCr-8i-TgJ"/>
+                            <constraint firstItem="J0V-Io-tWh" firstAttribute="width" secondItem="KaT-YL-dx9" secondAttribute="width" id="WLh-VE-Jn1"/>
                             <constraint firstItem="ljz-Rf-E9x" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="Ww3-kA-raZ"/>
                             <constraint firstItem="trA-IL-OKc" firstAttribute="top" secondItem="BjW-CD-37k" secondAttribute="bottom" constant="20" id="Xev-UX-ePW"/>
                             <constraint firstItem="qUG-An-OUB" firstAttribute="width" secondItem="KaT-YL-dx9" secondAttribute="width" id="Y1V-KU-ZaX"/>
@@ -1147,9 +1146,11 @@
                             <constraint firstItem="dUY-QY-8is" firstAttribute="leading" secondItem="trA-IL-OKc" secondAttribute="trailing" constant="2" id="e0N-WQ-SNl"/>
                             <constraint firstItem="KaT-YL-dx9" firstAttribute="leading" secondItem="SNM-Qs-U86" secondAttribute="trailing" constant="10" id="f1K-dL-fEz"/>
                             <constraint firstAttribute="trailing" secondItem="loM-OX-Nhc" secondAttribute="trailing" constant="20" id="fPg-5t-aNP"/>
+                            <constraint firstItem="J0V-Io-tWh" firstAttribute="leading" secondItem="qUG-An-OUB" secondAttribute="trailing" constant="10" id="fV7-t5-EG6"/>
                             <constraint firstItem="s8V-JD-okr" firstAttribute="leading" secondItem="dUY-QY-8is" secondAttribute="trailing" constant="10" id="fhV-Vl-6AE"/>
-                            <constraint firstItem="SNM-Qs-U86" firstAttribute="trailing" secondItem="Jpy-Jn-Opc" secondAttribute="trailing" id="gXq-Pz-2CY"/>
+                            <constraint firstItem="J0V-Io-tWh" firstAttribute="centerY" secondItem="qUG-An-OUB" secondAttribute="centerY" id="jFJ-Nw-69a"/>
                             <constraint firstItem="4Bl-az-FNd" firstAttribute="leading" secondItem="gok-El-kan" secondAttribute="trailing" constant="10" id="jFu-Xz-WVY"/>
+                            <constraint firstAttribute="trailing" secondItem="J0V-Io-tWh" secondAttribute="trailing" constant="20" id="ody-MV-H6N"/>
                             <constraint firstItem="gok-El-kan" firstAttribute="leading" secondItem="dUY-QY-8is" secondAttribute="leading" id="qda-oq-J7e"/>
                             <constraint firstAttribute="trailing" secondItem="NIm-o3-UsL" secondAttribute="trailing" constant="20" id="rLN-qK-IbH"/>
                             <constraint firstItem="eiY-jV-7zj" firstAttribute="top" secondItem="trA-IL-OKc" secondAttribute="bottom" constant="20" id="rMh-aK-kfV"/>
@@ -1157,7 +1158,6 @@
                             <constraint firstItem="Qdx-Rh-ZpA" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="v0E-qh-8Tn"/>
                             <constraint firstAttribute="bottom" secondItem="NIm-o3-UsL" secondAttribute="bottom" constant="20" id="v5B-XV-OvM"/>
                             <constraint firstItem="1FC-RX-Iom" firstAttribute="leading" secondItem="N5m-jx-FI1" secondAttribute="trailing" constant="10" id="vh9-tA-35X"/>
-                            <constraint firstAttribute="trailing" secondItem="qUG-An-OUB" secondAttribute="trailing" constant="20" id="vph-ur-9nx"/>
                             <constraint firstItem="Jpy-Jn-Opc" firstAttribute="width" secondItem="qUG-An-OUB" secondAttribute="width" id="xRX-d8-xSu"/>
                             <constraint firstItem="N5m-jx-FI1" firstAttribute="width" secondItem="s8V-JD-okr" secondAttribute="width" id="yaE-pN-r1I"/>
                             <constraint firstItem="trA-IL-OKc" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="yw7-Ly-rco"/>

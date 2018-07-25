@@ -89,7 +89,7 @@ class ViewController: NSViewController {
     func autoRun(){
         logType = "-l"
         logDateFormat = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}"
-        ip.stringValue = "172.17.72.109"
+        ip.stringValue = ConfigPlist["IP"] as! String
         let hourFormatter = DateFormatter()
         hourFormatter.dateFormat = "mm:ss"
         let dayFormatter = DateFormatter()
@@ -323,6 +323,42 @@ class ViewController: NSViewController {
             }
         }
     }
+    
+    @IBAction func Replace(_ sender: NSButton) {
+        aepsw.askpassword(1)
+        if actionPrepare(){
+            let program = killProgram.stringValue
+            if program.count == 0{
+                showmessage(inputString: "Please Input program name!")
+                return
+            }
+            let uploadPath = uploadFile.stringValue
+            if uploadPath.count == 0{
+                showmessage(inputString: "Please Drag file to upload!")
+                return
+            }
+            if program != self.findStringInString(str: uploadPath, pattern: "(?<=Desktop/).*(?=.app)"){
+                showmessage(inputString: "Replace app name must same as kill!")
+                return
+            }
+            for (index, ipaddress) in ipArr.enumerated() {
+                let indexnum = "(\(index+1)/\(ipArr.count)) \(ipaddress)"
+                DispatchQueue.global().async {
+                    self.queue.sync {
+                        self.sshKill(app: program, ip: ipaddress)
+                        self.showmessage(inputString: "\(indexnum) Kill \(program)")
+                        self.sshRemove(path: "/Users/\(self.username)/Desktop/\(program)", ip: ipaddress)
+                        self.showmessage(inputString: "\(indexnum) Remove \(program) on Desktop")
+                        self.scp(frompath: uploadPath, topath: "/Users/\(self.username)/Desktop/", upload: true, ip: ipaddress)
+                        self.showmessage(inputString: "\(indexnum) Upload \(program) to Desktop")
+                        self.sshOpen(app: program, ip: ipaddress)
+                        self.showmessage(inputString: "\(indexnum) Open \(program)")
+                    }
+                }
+            }
+        }
+    }
+    
     
     @IBAction func QuickExport(_ sender: NSButton) {
         if actionPrepare(){
