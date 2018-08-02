@@ -30,6 +30,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var scpPath: NSTextField!
     @IBOutlet weak var qexportBtn: NSButton!
     @IBOutlet weak var screenBtn: NSButton!
+    @IBOutlet weak var biglabel: NSTextField!
     
     var file = ""
     var logType = "-t"
@@ -62,22 +63,24 @@ class ViewController: NSViewController {
         downloadpath = paths[0] as! String
         file = Bundle.main.path(forResource:"Config", ofType: "plist")!
         ConfigPlist = NSDictionary(contentsOfFile: file)! as! [String : Any]
-        if ((ConfigPlist["LastOpen"]! as! String).count != 0){
-            let lastOpenDate = dateFormatter.date(from: (ConfigPlist["LastOpen"]! as! String))
-            let scptime = Int(Date().timeIntervalSince1970-(lastOpenDate?.timeIntervalSince1970)!)
-            if scptime > 3600*24*7{
+        auto = ConfigPlist["AutoRun"] as! Bool
+        if auto{
+            autoRun()
+        }else{
+            biglabel.isHidden = true
+            if ((ConfigPlist["LastOpen"]! as! String).count != 0){
+                let lastOpenDate = dateFormatter.date(from: (ConfigPlist["LastOpen"]! as! String))
+                let scptime = Int(Date().timeIntervalSince1970-(lastOpenDate?.timeIntervalSince1970)!)
+                if scptime > 3600*24*7{
+                    aepsw.askpassword(0)
+                    ConfigPlist["LastOpen"] = endTime.stringValue
+                    NSDictionary(dictionary: ConfigPlist).write(toFile: file, atomically: true)
+                }
+            }else{
                 aepsw.askpassword(0)
                 ConfigPlist["LastOpen"] = endTime.stringValue
                 NSDictionary(dictionary: ConfigPlist).write(toFile: file, atomically: true)
             }
-        }else{
-            aepsw.askpassword(0)
-            ConfigPlist["LastOpen"] = endTime.stringValue
-            NSDictionary(dictionary: ConfigPlist).write(toFile: file, atomically: true)
-        }
-        auto = ConfigPlist["AutoRun"] as! Bool
-        if auto{
-            autoRun()
         }
     }
 
@@ -97,17 +100,16 @@ class ViewController: NSViewController {
         var going = true
         DispatchTimer(timeInterval: 1) { (timer) in
             let nowtime = hourFormatter.string(from: Date())
-            //self.showmessage(inputString: nowtime)
-            if nowtime.suffix(2) == "00" && going{
+            if Int(nowtime.prefix(2))!%5 == 0 && going{
                 going = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                let delaytime = TimeInterval(60 - Int(nowtime.suffix(2))!)
+                self.showmessage(inputString: "Delay:\(Int(nowtime.suffix(2))!)")
+                DispatchQueue.main.asyncAfter(deadline:.now() + delaytime) {
                     going = true
                 }
-                if Int(nowtime.prefix(2))!%5 == 0{
-                    self.endTime.stringValue = "\(dayFormatter.string(from: Date())):00"
-                    self.startTime.stringValue = "\(dayFormatter.string(from: Date().addingTimeInterval(-300))):00"
-                    self.export(self.exportBtn)
-                }
+                self.endTime.stringValue = "\(dayFormatter.string(from: Date())):00"
+                self.startTime.stringValue = "\(dayFormatter.string(from: Date().addingTimeInterval(-300))):00"
+                self.export(self.exportBtn)
             }
         }
     }
@@ -184,8 +186,11 @@ class ViewController: NSViewController {
         let newlogDateFormat = self.logDateFormat.replacingOccurrences(of: "\\", with: "\\\\")
         var cmd = "/Users/\(self.username)/Downloads/TargetPlan \(self.logType) \(newlogDateFormat) \(sTime) \(eTime)"
         let getLogDataplist = Bundle.main.path(forResource:"getLogData", ofType: "plist")!
+        let autopath = "/Library/WebServer/Documents/PFA_Data_Audit_System/upload/\(sTime).\(eTime)"
         if auto{
             cmd.append(" csv")
+            let fileManager = FileManager.default
+            try! fileManager.createDirectory(atPath: autopath, withIntermediateDirectories: true, attributes: nil)
         }
         let tempsh = Bundle.main.path(forResource:"temp", ofType: "sh")!
         try! cmd.write(toFile: tempsh, atomically: true, encoding: String.Encoding.utf8)
@@ -228,7 +233,11 @@ class ViewController: NSViewController {
                     }
                     if finallogfile.count > 0{
                         self.showmessage(inputString: "\(indexnum) Download \(finallogfile)")
-                        self.scp(frompath: finallogfile, topath: self.downloadpath, upload: false, ip: ipaddress)
+                        if self.auto{
+                            self.scp(frompath: finallogfile, topath: autopath, upload: false, ip: ipaddress)
+                        }else{
+                            self.scp(frompath: finallogfile, topath: self.downloadpath, upload: false, ip: ipaddress)
+                        }
                     }
                     self.showmessage(inputString: "\(indexnum) Remove unwanted files")
                     self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(finallogfile)", ip: ipaddress)
@@ -242,9 +251,37 @@ class ViewController: NSViewController {
                     DispatchQueue.main.async {
                         self.exportBtn.isEnabled = true
                     }
+                    if self.auto{
+                        let returnmsg = self.getRequest(path: "127.0.0.1/PFA_Data_Audit_System/CoreData/Tasks.php?Action=AddTask&Status=File_OK&Type=ArtemisMMV&FilePath=\(sTime).\(eTime)")
+                        self.showmessage(inputString: "Upload result:\(returnmsg)")
+                    }
                 }
             }
         }
+    }
+
+    func getRequest(path:String) -> String {
+        var resStr:String?
+        let urlString:String = path
+        let url = URL(string:urlString)
+        let request = URLRequest(url: url!)
+        let session = URLSession.shared
+        let semaphore = DispatchSemaphore(value: 0)
+        let dataTask = session.dataTask(with: request,completionHandler: {(data, response, error) -> Void in
+            if error != nil{
+                print(error!)
+            }else{
+                let str = String(data: data!, encoding: String.Encoding.utf8)
+                resStr = str!
+            }
+            semaphore.signal()
+        }) as URLSessionTask
+        dataTask.resume()
+        _ = semaphore.wait(timeout: DispatchTime.distantFuture)
+        if (resStr == nil){
+            resStr = "FAIL"
+        }
+        return resStr!
     }
     
     @IBAction func Kill(_ sender: NSButton) {

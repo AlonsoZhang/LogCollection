@@ -1105,6 +1105,17 @@
                                     <action selector="Remove:" target="XfG-lQ-9wD" id="6Ks-p6-keA"/>
                                 </connections>
                             </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vnj-CT-Sae">
+                                <rect key="frame" x="18" y="180" width="791" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="dfR-QC-L1Q"/>
+                                </constraints>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Auto Mode" id="ZZS-OV-Ffn">
+                                    <font key="font" metaFont="system" size="150"/>
+                                    <color key="textColor" name="systemPinkColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="BjW-CD-37k" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="0pu-Qz-zSf"/>
@@ -1152,13 +1163,16 @@
                             <constraint firstItem="4Bl-az-FNd" firstAttribute="leading" secondItem="gok-El-kan" secondAttribute="trailing" constant="10" id="jFu-Xz-WVY"/>
                             <constraint firstAttribute="trailing" secondItem="J0V-Io-tWh" secondAttribute="trailing" constant="20" id="ody-MV-H6N"/>
                             <constraint firstItem="gok-El-kan" firstAttribute="leading" secondItem="dUY-QY-8is" secondAttribute="leading" id="qda-oq-J7e"/>
+                            <constraint firstItem="vnj-CT-Sae" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="qrY-0F-aDW"/>
                             <constraint firstAttribute="trailing" secondItem="NIm-o3-UsL" secondAttribute="trailing" constant="20" id="rLN-qK-IbH"/>
                             <constraint firstItem="eiY-jV-7zj" firstAttribute="top" secondItem="trA-IL-OKc" secondAttribute="bottom" constant="20" id="rMh-aK-kfV"/>
                             <constraint firstItem="gok-El-kan" firstAttribute="leading" secondItem="eiY-jV-7zj" secondAttribute="trailing" constant="4" id="sXO-EF-NsL"/>
+                            <constraint firstItem="vnj-CT-Sae" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="tAc-MB-sfW"/>
                             <constraint firstItem="Qdx-Rh-ZpA" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="v0E-qh-8Tn"/>
                             <constraint firstAttribute="bottom" secondItem="NIm-o3-UsL" secondAttribute="bottom" constant="20" id="v5B-XV-OvM"/>
                             <constraint firstItem="1FC-RX-Iom" firstAttribute="leading" secondItem="N5m-jx-FI1" secondAttribute="trailing" constant="10" id="vh9-tA-35X"/>
                             <constraint firstItem="Jpy-Jn-Opc" firstAttribute="width" secondItem="qUG-An-OUB" secondAttribute="width" id="xRX-d8-xSu"/>
+                            <constraint firstAttribute="trailing" secondItem="vnj-CT-Sae" secondAttribute="trailing" constant="20" id="xpI-hm-o7m"/>
                             <constraint firstItem="N5m-jx-FI1" firstAttribute="width" secondItem="s8V-JD-okr" secondAttribute="width" id="yaE-pN-r1I"/>
                             <constraint firstItem="trA-IL-OKc" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="yw7-Ly-rco"/>
                             <constraint firstItem="Jpy-Jn-Opc" firstAttribute="centerY" secondItem="1FC-RX-Iom" secondAttribute="centerY" id="zGF-pq-S85"/>
@@ -1167,6 +1181,7 @@
                     <connections>
                         <outlet property="aelogdate" destination="Q7C-ek-H6u" id="jRr-EP-aeT"/>
                         <outlet property="aplogdate" destination="6PW-S4-hcN" id="USe-OC-hlv"/>
+                        <outlet property="biglabel" destination="vnj-CT-Sae" id="Bkq-sq-rry"/>
                         <outlet property="docum" destination="ibP-00-Kfc" id="2fW-Te-XvQ"/>
                         <outlet property="dragView" destination="m2S-Jp-Qdl" id="PNm-WT-nxR"/>
                         <outlet property="endTime" destination="mNi-7u-MGT" id="Tvb-uY-H4h"/>

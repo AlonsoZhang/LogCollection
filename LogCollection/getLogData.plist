@@ -9,11 +9,11 @@
 		<key>ExcludeString</key>
 		<string></string>
 		<key>StartString</key>
-		<string>Product    : ++$Station ID : ++$SET SN : ++$Start Test Item [4]++$Receive Response =&gt; ++13$:++$TestResult : ++</string>
+		<string>[++$Product    : ++$Station ID : ++$SET SN : ++$Start Test Item [4]++$Receive Response =&gt; ++13$:++$TestResult : ++</string>
 		<key>EndString</key>
-		<string>[++$[++$IP++$=++$:++$,@++$;++</string>
+		<string>]++-4$[++$[++$IP++$=++$:++$,@++$;++</string>
 		<key>LogFormat</key>
-		<string>(Site)WIKS$(Product)[0]$(SerialNumber)[2]$(Station ID)[1]$(Test Pass/Fail Status)[6]$(SW_Ver)[4]$(Parametric)[5]</string>
+		<string>(Time)[0]$(Site)WIKS$(Product)[1]$(SerialNumber)[3]$(Station ID)[2]$(Test Pass/Fail Status)[7]$(SW_Ver)[5]$(Parametric)[6]</string>
 	</dict>
 </dict>
 </plist>
