@@ -45,6 +45,7 @@ class ViewController: NSViewController {
     let paths = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true) as NSArray
     var downloadpath = ""
     var auto = false
+    var firstUpload = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,10 +112,13 @@ class ViewController: NSViewController {
                 let standardtime = "\(dayFormatter.string(from: Date().addingTimeInterval(-300))):00"
                 if self.ConfigPlist["LastEndTime"] != nil{
                     let lastendtime = self.ConfigPlist["LastEndTime"] as! String
-                    if (lastendtime == standardtime){
-                        self.startTime.stringValue = lastendtime
-                    }else{
+                    if lastendtime == ""{
                         self.startTime.stringValue = standardtime
+                    }else{
+                        self.startTime.stringValue = lastendtime
+                        if (lastendtime != standardtime){
+                            self.showmessage(inputString: "Warning: Last end time is \(lastendtime)")
+                        }
                     }
                 }else{
                     self.startTime.stringValue = standardtime
@@ -215,9 +219,8 @@ class ViewController: NSViewController {
             var returnflag = false
             DispatchQueue.global().async {
                 self.queue.sync {
-                    self.showmessage(inputString: "\(indexnum) Upload TargetPlan")
                     let beforescp = Date()
-                    self.scp(frompath: targetplanfile, topath: "/Users/\(self.username)/Downloads/",upload: true,ip: ipaddress)
+                    self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
                     let afterscp = Date()
                     let scptime = Int(afterscp.timeIntervalSince1970-beforescp.timeIntervalSince1970)
                     if scptime > 9{
@@ -226,7 +229,10 @@ class ViewController: NSViewController {
                         returnflag = true
                         return
                     }
-                    self.scp(frompath: tempsh, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
+                    if self.firstUpload{
+                        self.showmessage(inputString: "\(indexnum) Upload TargetPlan")
+                        self.scp(frompath: targetplanfile, topath: "/Users/\(self.username)/Downloads/",upload: true,ip: ipaddress)
+                    }
                     if self.auto{
                         self.scp(frompath: getLogDataplist, topath: "/Users/\(self.username)/Downloads/", upload: true, ip: ipaddress)
                     }
@@ -255,9 +261,11 @@ class ViewController: NSViewController {
                         }
                     }
                     self.showmessage(inputString: "\(indexnum) Remove unwanted files")
-                    self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh /Users/\(self.username)/Downloads/TargetPlan \(finallogfile)", ip: ipaddress)
+                    self.sshRemove(path: "/Users/\(self.username)/Downloads/temp.sh \(finallogfile)", ip: ipaddress)
                     if self.auto{
                         self.sshRemove(path: "/Users/\(self.username)/Downloads/getLogData.plist", ip: ipaddress)
+                    }else{
+                        self.sshRemove(path: "/Users/\(self.username)/Downloads/TargetPlan", ip: ipaddress)
                     }
                     self.showmessage(inputString: "\(indexnum) Well Done!")
                     countnum = countnum - 1
@@ -267,12 +275,13 @@ class ViewController: NSViewController {
                         self.exportBtn.isEnabled = true
                     }
                     if self.auto{
-                        let returnmsg = self.getRequest(path: "127.0.0.1/PFA_Data_Audit_System/CoreData/Tasks.php?Action=AddTask&Status=File_OK&Type=ArtemisMMV&FilePath=\(sTime).\(eTime)")
+                        let returnmsg = self.getRequest(path: "http://127.0.0.1/PFA_Data_Audit_System/CoreData/Tasks.php?Action=AddTask&Status=File_OK&Type=ArtemisMMV&FilePath=\(sTime).\(eTime)")
                         self.showmessage(inputString: "Upload result:\(returnmsg)")
                         DispatchQueue.main.async {
                             self.ConfigPlist["LastEndTime"] = self.endTime.stringValue
                             NSDictionary(dictionary: self.ConfigPlist).write(toFile: self.file, atomically: true)
                         }
+                        self.firstUpload = false
                     }
                 }
             }
