@@ -108,10 +108,25 @@ class ViewController: NSViewController {
                     going = true
                 }
                 self.endTime.stringValue = "\(dayFormatter.string(from: Date())):00"
-                self.startTime.stringValue = "\(dayFormatter.string(from: Date().addingTimeInterval(-300))):00"
+                let standardtime = "\(dayFormatter.string(from: Date().addingTimeInterval(-300))):00"
+                if self.ConfigPlist["LastEndTime"] != nil{
+                    let lastendtime = self.ConfigPlist["LastEndTime"] as! String
+                    if (lastendtime == standardtime){
+                        self.startTime.stringValue = lastendtime
+                    }else{
+                        self.startTime.stringValue = standardtime
+                    }
+                }else{
+                    self.startTime.stringValue = standardtime
+                }
                 self.export(self.exportBtn)
             }
         }
+        
+        //手动设定时间
+//        self.endTime.stringValue = "2018-08-07 08:50:00"
+//        self.startTime.stringValue = "2018-08-06 17:50:00"
+//        self.export(self.exportBtn)
     }
     
     /// GCD定时器循环操作
@@ -254,6 +269,10 @@ class ViewController: NSViewController {
                     if self.auto{
                         let returnmsg = self.getRequest(path: "127.0.0.1/PFA_Data_Audit_System/CoreData/Tasks.php?Action=AddTask&Status=File_OK&Type=ArtemisMMV&FilePath=\(sTime).\(eTime)")
                         self.showmessage(inputString: "Upload result:\(returnmsg)")
+                        DispatchQueue.main.async {
+                            self.ConfigPlist["LastEndTime"] = self.endTime.stringValue
+                            NSDictionary(dictionary: self.ConfigPlist).write(toFile: self.file, atomically: true)
+                        }
                     }
                 }
             }

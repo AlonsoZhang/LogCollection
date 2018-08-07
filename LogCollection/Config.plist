@@ -4,6 +4,8 @@
 <dict>
 	<key>LastOpen</key>
 	<string></string>
+	<key>LastEndTime</key>
+	<string></string>
 	<key>AutoRun</key>
 	<true/>
 	<key>IP</key>
