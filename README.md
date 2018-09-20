@@ -1,10 +1,11 @@
 # LogCollection
 
-鉴于线上所有测试站都已改为全屏，无法通过VNC查看log，现提供一种轻松获取线上log的Tool。
 
-此Tool在线上server上使用，不会影响线上正常测试。
+用命令行完成对远端计算机的一系列操作，用于不方便使用VNC和批量操作时使用。
 
 首次启动密码为AE Password所生成的密码，有效期为七天。
+
+![logcollection.png](http://www.zhangwu.tech/logcollection.png)
 
 ## 各按钮功能
 1. Log Path: TMPDIR为系统缓存中的log，Mac Mini重启后会清空。Documents为程序写在本地的log，通常在/Users/gdlocal/Documents/中。
@@ -17,9 +18,11 @@
 8. Open: 打开App框内地址的程序，默认为桌面上的该App，也可写全地址来打开对应程序。
 9. Upload: 将所需上传文件拖到此App窗口，Upload由灰转为常态，点击后上传至对应ip的Downloads文件夹。
 10. Remove: 将对应ip的Downloads文件夹清空，并清除所有terminal历史记录。
-11. Replace: 替换正在运行的程序（如D21_AE_Mix）。
-12. Quick Export: 在Path框内输入远端需复制到本地的文件或文件夹的完整路径，点击Quick Export后快速执行复制指令，存在本地Downloads文件夹内。
-13. Screen Capture: 获取对应ip的桌面截图，存在Downloads文件夹内。
-14. Open SSH: 打开terminal，进入对应ip的SSH，获得控制权，供手动下指令完成之后动作。
+11. Quick Export: 在Path框内输入远端需复制到本地的文件或文件夹的完整路径，点击Quick Export后快速执行复制指令，存在本地Downloads文件夹内。
+12. Screen Capture: 获取对应ip的桌面截图，存在Downloads文件夹内。
+13. Open SSH: 打开terminal，进入对应ip的SSH，获得控制权，供手动下指令完成之后动作。
+14. Replace: 替换正在运行的程序.
 
 *PS: 关于ip，在NewOpenVNC中点击打开屏幕共享时会自动复制当站ip，点击线名时可以选择复制整条线的ip，供该Tool使用。*
+
+![Openvncip.png](http://www.zhangwu.tech/Openvncip.png)
