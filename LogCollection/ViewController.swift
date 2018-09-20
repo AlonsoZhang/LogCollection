@@ -46,6 +46,7 @@ class ViewController: NSViewController {
     var downloadpath = ""
     var auto = false
     var firstUpload = true
+    var localfinished = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +67,7 @@ class ViewController: NSViewController {
         ConfigPlist = NSDictionary(contentsOfFile: file)! as! [String : Any]
         auto = ConfigPlist["AutoRun"] as! Bool
         if auto{
-            autoRun()
+            self.autoRun()
         }else{
             biglabel.isHidden = true
             if ((ConfigPlist["LastOpen"]! as! String).count != 0){
@@ -93,7 +94,6 @@ class ViewController: NSViewController {
     func autoRun(){
         logType = "-l"
         logDateFormat = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}"
-        ip.stringValue = ConfigPlist["IP"] as! String
         let hourFormatter = DateFormatter()
         hourFormatter.dateFormat = "mm:ss"
         let dayFormatter = DateFormatter()
@@ -123,7 +123,12 @@ class ViewController: NSViewController {
                 }else{
                     self.startTime.stringValue = standardtime
                 }
-                self.export(self.exportBtn)
+                self.checkIPconnect(ipstr: self.ConfigPlist["IP-local"] as! String)
+                DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 5.0) {
+                    DispatchQueue.main.async {
+                        self.export(self.exportBtn)
+                    }
+                }
             }
         }
         
@@ -187,8 +192,10 @@ class ViewController: NSViewController {
     @IBAction func export(_ sender: NSButton) {
         let dateFormatter2 = DateFormatter()
         dateFormatter2.dateFormat = "yyyyMMddHHmmss"
-        let startDate = dateFormatter.date(from: startTime.stringValue)
-        let endDate = dateFormatter.date(from: endTime.stringValue)
+        let startTimestr = self.startTime.stringValue
+        let endTimestr = self.endTime.stringValue
+        let startDate = dateFormatter.date(from: startTimestr)
+        let endDate = dateFormatter.date(from: endTimestr)
         if startDate == nil || endDate == nil{
             showmessage(inputString: "Date format is error, please check.")
             return
@@ -196,7 +203,10 @@ class ViewController: NSViewController {
         if !actionPrepare(){
             return
         }
-        exportBtn.isEnabled = false
+        ConfigPlist = NSDictionary(contentsOfFile: file)! as! [String : Any]
+        DispatchQueue.main.async {
+            self.exportBtn.isEnabled = false
+        }
         showmessage(inputString: "Start Program ... Total \(ipArr.count) IP")
         var countnum = ipArr.count
         let sTime = dateFormatter2.string(from: startDate!)
@@ -275,13 +285,27 @@ class ViewController: NSViewController {
                         self.exportBtn.isEnabled = true
                     }
                     if self.auto{
-                        let returnmsg = self.getRequest(path: "http://127.0.0.1/PFA_Data_Audit_System/CoreData/Tasks.php?Action=AddTask&Status=File_OK&Type=ArtemisMMV&FilePath=\(sTime).\(eTime)")
-                        self.showmessage(inputString: "Upload result:\(returnmsg)")
-                        DispatchQueue.main.async {
-                            self.ConfigPlist["LastEndTime"] = self.endTime.stringValue
-                            NSDictionary(dictionary: self.ConfigPlist).write(toFile: self.file, atomically: true)
+                        DispatchQueue.main.sync {
+                            let iptemp = self.ConfigPlist["IP-temp"] as! String
+                            if (!self.localfinished && iptemp.count > 0){
+                                self.logType = "-t"
+                                self.logDateFormat = "\\d{8}-\\d{6}"
+                                self.checkIPconnect(ipstr: self.ConfigPlist["IP-temp"] as! String)
+                                DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 5.0) {
+                                    self.localfinished = true
+                                    DispatchQueue.main.async {
+                                        self.export(self.exportBtn)
+                                    }
+                                }
+                            }else{
+                                self.localfinished = false
+                                let returnmsg = self.getRequest(path: "http://127.0.0.1/PFA_Data_Audit_System/CoreData/Tasks.php?Action=AddTask&Status=File_OK&Type=ArtemisMMV&FilePath=\(sTime).\(eTime)")
+                                self.showmessage(inputString: "Upload result:\(returnmsg)")
+                                self.ConfigPlist["LastEndTime"] = self.endTime.stringValue
+                                NSDictionary(dictionary: self.ConfigPlist).write(toFile: self.file, atomically: true)
+                                self.firstUpload = false
+                            }
                         }
-                        self.firstUpload = false
                     }
                 }
             }
@@ -496,6 +520,30 @@ class ViewController: NSViewController {
         }
     }
     
+    func checkIPconnect(ipstr:String) {
+        ipArr = ipstr.components(separatedBy: ",")
+        ip.stringValue = ""
+        username = user.stringValue
+        for (_, ipaddress) in ipArr.enumerated() {
+            DispatchQueue.global().async {
+                let returnmsg = self.ssh(ip: ipaddress)
+                if (returnmsg.contains("Password")||returnmsg.contains("yes")){
+                    self.queue.sync {
+                        DispatchQueue.main.async {
+                            if (self.ip.stringValue == ""){
+                                self.ip.stringValue = ipaddress
+                            }else{
+                                 self.ip.stringValue.append(",\(ipaddress)")
+                            }
+                        }
+                    }
+                }else{
+                    self.showmessage(inputString: "\(ipaddress) can't connect")
+                }
+            }
+        }
+    }
+    
     func actionPrepare() -> Bool {
         if ip.stringValue.count == 0{
             showmessage(inputString: "No IP, please check.")
@@ -546,12 +594,12 @@ class ViewController: NSViewController {
     }
     
     func ssh(ip:String) -> String{
-        let sshfile = Bundle.main.path(forResource:"ssh", ofType: "")!
+        let sshfile = Bundle.main.path(forResource:"testssh", ofType: "")!
         let task = Process()
         let pipe = Pipe()
         task.standardOutput = pipe
         task.launchPath = "/usr/bin/expect"
-        let arguments = ["\(sshfile)","\(self.username)@\(ip)","\(self.password)"]
+        let arguments = ["\(sshfile)","\(self.username)@\(ip)"]
         task.arguments = arguments
         task.launch()
         task.waitUntilExit()

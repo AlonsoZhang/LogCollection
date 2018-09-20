@@ -1,0 +1,10 @@
+#!/usr/bin/expect -f
+set command [lindex $argv 0]
+set timeout 2
+spawn  ssh $command
+
+expect {
+	"yes/no" { expect eof}
+
+    "*assword:" { expect eof }
+}

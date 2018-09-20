@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>MMV</key>
+	<key>D21-MMV</key>
 	<dict>
 		<key>IncludeString</key>
 		<string>SET SN$Start Test Item [4]$Uppdca: YES</string>
@@ -14,6 +14,32 @@
 		<string>]++-4$[++$[++$IP++$=++$:++$,@++$;++</string>
 		<key>LogFormat</key>
 		<string>(Time)[0]$(Site)WIKS$(Product)[1]$(SerialNumber)[3]$(Station ID)[2]$(Test Pass/Fail Status)[7]$(SW_Ver)[5]$(Parametric)[6]</string>
+	</dict>
+	<key>D21-AE-22</key>
+	<dict>
+		<key>IncludeString</key>
+		<string>SET SN$Start Test Item [4]$Uppdca: YES</string>
+		<key>ExcludeString</key>
+		<string></string>
+		<key>StartString</key>
+		<string>[++$Product    : ++$Station ID : ++$SET SN : ++$Start Test Item [4]++$Receive Response =&gt; ++13$:++$TestResult : ++</string>
+		<key>EndString</key>
+		<string>]++-4$[++$[++$IP++$=++$:++$:2018++$;++</string>
+		<key>LogFormat</key>
+		<string>(Time)[0]$(Site)WIKS$(Product)[1]$(SerialNumber)[3]$(Station ID)[2]$(Test Pass/Fail Status)[7]$(SW_Ver)[5]$(Parametric)[6]</string>
+	</dict>
+	<key>D11-AE-3</key>
+	<dict>
+		<key>IncludeString</key>
+		<string>SET SN$Start Test Item [4]$UP to PDCA : YES</string>
+		<key>ExcludeString</key>
+		<string></string>
+		<key>StartString</key>
+		<string>[++$Product : ++$Station ID  : ++$SET SN : ++$Start Test Item [4]++$Command response =&gt;++19$TestResult : ++</string>
+		<key>EndString</key>
+		<string>]++-4$[++$[++$[++$=++$,@++$;++</string>
+		<key>LogFormat</key>
+		<string>(Time)[0]$(Site)WIKS$(Product)[1]$(SerialNumber)[3]$(Station ID)[2]$(Test Pass/Fail Status)[6]$(SW_Ver)$(Parametric)[5]</string>
 	</dict>
 </dict>
 </plist>
