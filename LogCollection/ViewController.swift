@@ -92,8 +92,6 @@ class ViewController: NSViewController {
     }
     
     func autoRun(){
-        logType = "-l"
-        logDateFormat = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}"
         let hourFormatter = DateFormatter()
         hourFormatter.dateFormat = "mm:ss"
         let dayFormatter = DateFormatter()
@@ -126,6 +124,8 @@ class ViewController: NSViewController {
                 self.checkIPconnect(ipstr: self.ConfigPlist["IP-local"] as! String)
                 DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 5.0) {
                     DispatchQueue.main.async {
+                        self.logType = "-l"
+                        self.logDateFormat = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}"
                         self.export(self.exportBtn)
                     }
                 }
@@ -288,11 +288,11 @@ class ViewController: NSViewController {
                         DispatchQueue.main.sync {
                             let iptemp = self.ConfigPlist["IP-temp"] as! String
                             if (!self.localfinished && iptemp.count > 0){
+                                self.localfinished = true
                                 self.logType = "-t"
                                 self.logDateFormat = "\\d{8}-\\d{6}"
                                 self.checkIPconnect(ipstr: self.ConfigPlist["IP-temp"] as! String)
                                 DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 5.0) {
-                                    self.localfinished = true
                                     DispatchQueue.main.async {
                                         self.export(self.exportBtn)
                                     }
